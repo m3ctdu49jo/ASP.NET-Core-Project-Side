@@ -17,7 +17,7 @@ namespace ShoppingMall.Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<CustomerDTO> GetCustomerByIdAsync(int id)
+        public async Task<CustomerDTO> GetCustomerByIdAsync(string id)
         {
             var customer = await _unitOfWork.Customers.GetByIdAsync(id);
             return _mapper.Map<CustomerDTO>(customer);

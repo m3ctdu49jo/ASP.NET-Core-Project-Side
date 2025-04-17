@@ -6,7 +6,7 @@ namespace ShoppingMall.Infrastructure.Services
 {
     public interface ICustomerService
     {
-        Task<CustomerDTO> GetCustomerByIdAsync(int id);
+        Task<CustomerDTO> GetCustomerByIdAsync(string id);
         Task<IEnumerable<CustomerDTO>> GetAllCustomersAsync();
         Task<CustomerDTO> CreateCustomerAsync(CustomerDTO customerDto);
         Task<CustomerDTO> UpdateCustomerAsync(CustomerDTO customerDto);

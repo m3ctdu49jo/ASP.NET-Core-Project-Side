@@ -23,6 +23,10 @@ namespace ShoppingMall.Infrastructure.Repositories
         {
             return await _dbSet.FindAsync(id);
         }
+        public async Task<T?> GetByIdAsync(string id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
@@ -51,6 +55,14 @@ namespace ShoppingMall.Infrastructure.Repositories
         }
 
         public async Task DeleteAsync(int id)
+        {
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+            }
+        }
+        public async Task DeleteAsync(string id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
