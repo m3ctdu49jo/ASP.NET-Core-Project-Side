@@ -32,7 +32,7 @@ namespace ShoppingMall.Tests
         public async Task GetCustomerByIdAsync_ExistingId_ReturnsCustomerDTO()
         {
             // Arrange
-            var customerId = 1;
+            var customerId = "ALFKI";
             var customer = new Customer { CustomerID = "ALFKI" };
             var customerDto = new CustomerDTO { CustomerID = "ALFKI" };
 
