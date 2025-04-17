@@ -1,0 +1,103 @@
+@model ShoppingMall.Infrastructure.Common.PaginatedList<ShoppingMall.DTOs.CustomerDTO>
+
+@{
+    ViewData["Title"] = "客戶列表";
+}
+
+<h1>客戶列表</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">建立新客戶</a>
+</p>
+
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="搜尋公司名稱、聯絡人、城市或國家..." />
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-outline-secondary">搜尋</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">清除</a>
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Items.First().CompanyName)</a>
+            </th>
+            <th>@Html.DisplayNameFor(model => model.Items.First().ContactName)</th>
+            <th>@Html.DisplayNameFor(model => model.Items.First().ContactTitle)</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CitySortParm"]">@Html.DisplayNameFor(model => model.Items.First().City)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CountrySortParm"]">@Html.DisplayNameFor(model => model.Items.First().Country)</a>
+            </th>
+            <th>@Html.DisplayNameFor(model => model.Items.First().Phone)</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.CompanyName)</td>
+                <td>@Html.DisplayFor(modelItem => item.ContactName)</td>
+                <td>@Html.DisplayFor(modelItem => item.ContactTitle)</td>
+                <td>@Html.DisplayFor(modelItem => item.City)</td>
+                <td>@Html.DisplayFor(modelItem => item.Country)</td>
+                <td>@Html.DisplayFor(modelItem => item.Phone)</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Edit" asp-route-id="@item.CustomerID" class="btn btn-warning btn-sm">編輯</a>
+                        <a asp-action="Details" asp-route-id="@item.CustomerID" class="btn btn-info btn-sm">詳細資料</a>
+                        <a asp-action="Delete" asp-route-id="@item.CustomerID" class="btn btn-danger btn-sm">刪除</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<div class="d-flex justify-content-between align-items-center">
+    <div>
+        顯示 @((Model.PageIndex - 1) * 10 + 1) 到 @(Math.Min(Model.PageIndex * 10, Model.TotalCount)) 筆，共 @Model.TotalCount 筆資料
+    </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item @prevDisabled">
+                <a class="page-link" asp-action="Index"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    上一頁
+                </a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-pageNumber="@i"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                        @i
+                    </a>
+                </li>
+            }
+            <li class="page-item @nextDisabled">
+                <a class="page-link" asp-action="Index"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    下一頁
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div> 

@@ -1,0 +1,142 @@
+@model ShoppingMall.DTOs.CustomerDTO
+
+@{
+    ViewData["Title"] = "建立新客戶";
+}
+
+<h1>建立新客戶</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create" id="customerForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">基本資訊</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label asp-for="CustomerID" class="control-label">客戶編號</label>
+                        <input asp-for="CustomerID" class="form-control" placeholder="請輸入5個字元的客戶編號" maxlength="5" />
+                        <span asp-validation-for="CustomerID" class="text-danger"></span>
+                        <small class="form-text text-muted">客戶編號必須是5個字元，只能包含英文字母和數字</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="CompanyName" class="control-label">公司名稱</label>
+                        <input asp-for="CompanyName" class="form-control" placeholder="請輸入公司名稱" />
+                        <span asp-validation-for="CompanyName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">聯絡資訊</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label asp-for="ContactName" class="control-label">聯絡人姓名</label>
+                        <input asp-for="ContactName" class="form-control" placeholder="請輸入聯絡人姓名" />
+                        <span asp-validation-for="ContactName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ContactTitle" class="control-label">聯絡人職稱</label>
+                        <input asp-for="ContactTitle" class="form-control" placeholder="請輸入聯絡人職稱" />
+                        <span asp-validation-for="ContactTitle" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Phone" class="control-label">電話</label>
+                        <input asp-for="Phone" class="form-control" placeholder="請輸入電話號碼" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                        <small class="form-text text-muted">格式：(02) 1234-5678 或 0912-345-678</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Fax" class="control-label">傳真</label>
+                        <input asp-for="Fax" class="form-control" placeholder="請輸入傳真號碼" />
+                        <span asp-validation-for="Fax" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">地址資訊</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label asp-for="Address" class="control-label">地址</label>
+                        <input asp-for="Address" class="form-control" placeholder="請輸入完整地址" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label">城市</label>
+                        <input asp-for="City" class="form-control" placeholder="請輸入城市" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Region" class="control-label">地區</label>
+                        <input asp-for="Region" class="form-control" placeholder="請輸入地區" />
+                        <span asp-validation-for="Region" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PostalCode" class="control-label">郵遞區號</label>
+                        <input asp-for="PostalCode" class="form-control" placeholder="請輸入郵遞區號" />
+                        <span asp-validation-for="PostalCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Country" class="control-label">國家</label>
+                        <input asp-for="Country" class="form-control" placeholder="請輸入國家" />
+                        <span asp-validation-for="Country" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="建立" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            // 客戶編號格式驗證
+            $("#CustomerID").on("input", function () {
+                var value = $(this).val();
+                if (!/^[A-Za-z0-9]{0,5}$/.test(value)) {
+                    $(this).val(value.replace(/[^A-Za-z0-9]/g, ''));
+                }
+            });
+
+            // 電話號碼格式驗證
+            $("#Phone").on("input", function () {
+                var value = $(this).val();
+                if (!/^[\d\-\(\)\s]*$/.test(value)) {
+                    $(this).val(value.replace(/[^\d\-\(\)\s]/g, ''));
+                }
+            });
+
+            // 表單提交前驗證
+            $("#customerForm").on("submit", function (e) {
+                var customerId = $("#CustomerID").val();
+                if (customerId.length !== 5) {
+                    alert("客戶編號必須是5個字元");
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+    </script>
+} 

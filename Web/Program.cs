@@ -1,0 +1,71 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ShoppingMall.Infrastructure.Data;
+using ShoppingMall.Infrastructure.Repositories;
+using ShoppingMall.Infrastructure.Services;
+using ShoppingMall.Models;
+using ShoppingMall.Mappings;
+using AutoMapper;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+// 配置資料庫
+builder.Services.AddDbContext<NorthwindContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("NorthwindConnection")));
+
+// 配置AutoMapper
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+// 註冊UnitOfWork
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
+
+// 註冊Services
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+// 添加記憶體快取
+builder.Services.AddMemoryCache();
+
+var app = builder.Build();
+
+// 初始化資料庫
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<NorthwindContext>();
+        DbInitializer.Initialize(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "初始化資料庫時發生錯誤。");
+    }
+}
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();
