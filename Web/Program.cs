@@ -8,6 +8,7 @@ using ShoppingMall.Infrastructure.Services;
 using ShoppingMall.Models;
 using ShoppingMall.Mappings;
 using AutoMapper;
+using ShoppingMall;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
 
 // 註冊Services
+builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 // 添加記憶體快取

@@ -23,6 +23,7 @@ namespace ShoppingMall.Infrastructure.Repositories
         {
             return await _dbSet.FindAsync(id);
         }
+        
         public async Task<T?> GetByIdAsync(string id)
         {
             return await _dbSet.FindAsync(id);

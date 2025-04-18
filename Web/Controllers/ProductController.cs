@@ -9,10 +9,12 @@ namespace ShoppingMall.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IOrderService _orderService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IOrderService orderService)
         {
             _productService = productService;
+            _orderService = orderService;
         }
 
         public async Task<IActionResult> Index()
