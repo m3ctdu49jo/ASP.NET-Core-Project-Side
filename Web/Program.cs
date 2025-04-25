@@ -9,6 +9,7 @@ using ShoppingMall.Models;
 using ShoppingMall.Mappings;
 using AutoMapper;
 using ShoppingMall;
+using ShoppingMall.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,12 +25,15 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 // 註冊UnitOfWork
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
+
+// 註冊Respoitories
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // 註冊Services
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 // 添加記憶體快取
 builder.Services.AddMemoryCache();
 

@@ -15,6 +15,7 @@ namespace ShoppingMall.Controllers
         {
             _productService = productService;
             _orderService = orderService;
+            
         }
 
         public async Task<IActionResult> Index()
