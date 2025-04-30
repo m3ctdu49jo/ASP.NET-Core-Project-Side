@@ -2,9 +2,9 @@
 
 namespace ShoppingMall.Infrastructure.Services
 {
-    public interface IService<T> where T : class
+    public interface IService<TModel, TModelDTO> where TModel : class where TModelDTO : class
     {
-        IGenericService<T> Generic {get;}
+        IGenericService<TModel, TModelDTO> Generic {get;}
     }
 }
 
