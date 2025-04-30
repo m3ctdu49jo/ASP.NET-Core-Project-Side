@@ -21,6 +21,13 @@ namespace ShoppingMall.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.ApplyConfiguration(new OrderConfiguration());
+
+            // typeof(NorthwindContext).Assembly 表示從當前專案的組件中加載所有
+            // 配置類別(EntityTypeConfiguration<T>)，如上方"OrderConfiguration"。
+            // 這樣可以避免手動為每個實體類別添加配置。
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(NorthwindContext).Assembly);
+
             modelBuilder.Entity<Customer>(entity =>
             {
                 entity.HasKey(e => e.CustomerID);
@@ -43,17 +50,6 @@ namespace ShoppingMall.Infrastructure.Data
                 entity.Property(e => e.ProductName).IsRequired().HasMaxLength(40);
                 entity.Property(e => e.QuantityPerUnit).HasMaxLength(20);
                 entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,2)");
-            });
-
-            modelBuilder.Entity<Order>(entity =>
-            {
-                entity.HasKey(e => e.OrderID);
-                entity.Property(e => e.OrderDate).HasColumnType("datetime");
-                entity.Property(e => e.ShippedDate).HasColumnType("datetime");
-                entity.HasOne(e => e.Customer)
-                    .WithMany(c => c.Orders)
-                    .HasForeignKey(e => e.CustomerID);
-
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
@@ -82,3 +78,4 @@ namespace ShoppingMall.Infrastructure.Data
         }
     }
 } 
+

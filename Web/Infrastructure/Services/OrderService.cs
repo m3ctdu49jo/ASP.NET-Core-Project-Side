@@ -5,13 +5,13 @@ namespace ShoppingMall.Infrastructure.Services;
 
 public class OrderService : IOrderService
 {
-    IGenericService<Order> _genericService;
-    public OrderService(IGenericService<Order> genericService)
+    IGenericService<Order, OrderDTO> _genericService;
+    public OrderService(IGenericService<Order, OrderDTO> genericService)
     {
         _genericService = genericService;
     }
 
-    public IGenericService<Order> Generic
+    public IGenericService<Order, OrderDTO> Generic
     {
         get => _genericService;
     }
