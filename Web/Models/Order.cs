@@ -49,7 +49,7 @@ namespace ShoppingMall.Models
             builder.HasKey(o => o.OrderID);
             builder.Property(o =>o.CustomerID).HasMaxLength(5);
             builder.Property(o => o.OrderDate).HasColumnType("datetime");
-            builder.Property(o => o.ShippedDate).HasColumnType("datatime");
+            builder.Property(o => o.ShippedDate).HasColumnType("datetime");
             builder.Property(o => o.ShipName).HasMaxLength(40);
             builder.Property(o => o.ShipAddress).HasMaxLength(60);
             builder.Property(o => o.ShipCity).HasMaxLength(15);

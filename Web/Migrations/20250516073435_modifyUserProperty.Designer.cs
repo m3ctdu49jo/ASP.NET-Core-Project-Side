@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShoppingMall.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using ShoppingMall.Infrastructure.Data;
 namespace ShoppingMall.Migrations
 {
     [DbContext(typeof(NorthwindContext))]
-    partial class NorthwindContextModelSnapshot : ModelSnapshot
+    [Migration("20250516073435_modifyUserProperty")]
+    partial class modifyUserProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -270,14 +273,14 @@ namespace ShoppingMall.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateTime?>("CreatDate")
+                    b.Property<DateTime>("CreatDate")
                         .HasColumnType("datetime");
 
                     b.Property<string>("Email")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("LastLoginDate")
+                    b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("datetime");
 
                     b.Property<string>("Name")
@@ -294,7 +297,7 @@ namespace ShoppingMall.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateTime?>("UpdateDate")
+                    b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime");
 
                     b.Property<string>("UserName")

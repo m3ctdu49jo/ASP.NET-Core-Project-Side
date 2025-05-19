@@ -16,6 +16,7 @@ namespace ShoppingMall.Infrastructure.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -75,6 +76,25 @@ namespace ShoppingMall.Infrastructure.Data
                 entity.Property(e => e.PostalCode).HasMaxLength(10);
                 entity.Property(e => e.Country).HasMaxLength(15);
             });
+            
+
+            modelBuilder.Entity<User>(entity => 
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.UserName).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(20);
+                entity.Property(e => e.Password).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Email).HasMaxLength(50);
+                entity.Property(e => e.Phone).HasMaxLength(20);
+                entity.Property(e => e.Address).HasMaxLength(100);
+                entity.Property(e => e.Country).HasMaxLength(20);
+                entity.Property(e => e.City).HasMaxLength(20);
+                entity.Property(e => e.CreatDate).HasColumnType("datetime");
+                entity.Property(e => e.UpdateDate).HasColumnType("datetime");
+                entity.Property(e => e.LastLoginDate).HasColumnType("datetime");
+
+            });
+
         }
     }
 } 
