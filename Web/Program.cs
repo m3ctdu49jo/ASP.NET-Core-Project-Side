@@ -16,6 +16,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // 設定Session的過期時間
+    options.Cookie.HttpOnly = true; // 設定Cookie為HttpOnly，防止JavaScript訪問
+    options.Cookie.IsEssential = true; // 設定Cookie為必要，確保在GDPR下仍然可用
+});
+
 // 配置資料庫
 builder.Services.AddDbContext<NorthwindContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("NorthwindConnection")));
@@ -34,6 +43,7 @@ builder.Services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>)
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IUserService, UserService>();
 // 添加記憶體快取
 builder.Services.AddMemoryCache();
 
