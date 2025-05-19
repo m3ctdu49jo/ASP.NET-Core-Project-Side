@@ -3,7 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ShoppingMall.Infrastructure.Repositories;
 
-namespace ShoppingMall;
+namespace ShoppingMall.Infrastructure.Services;
 
 public class GenericService<TModel, TModelDTO> : IGenericService<TModel, TModelDTO> where TModel : class where TModelDTO : class
 {
@@ -19,11 +19,13 @@ public class GenericService<TModel, TModelDTO> : IGenericService<TModel, TModelD
     {
         var model = _mapper.Map<TModel>(entity);
         await _repository.AddAsync(model);
+        await _repository.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int id)
     {
         await _repository.DeleteAsync(id);
+        await _repository.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<TModelDTO>> GetAllAsync()
@@ -42,5 +44,6 @@ public class GenericService<TModel, TModelDTO> : IGenericService<TModel, TModelD
             throw new ArgumentNullException(nameof(entity));
         var model = _mapper.Map<TModel>(entity);
         await _repository.UpdateAsync(model);
+        await _repository.SaveChangesAsync();
     }
 }
