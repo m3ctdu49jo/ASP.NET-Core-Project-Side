@@ -36,10 +36,10 @@ public class UserService : IUserService
         {
             User user = users.FirstOrDefault();
             var result = hasher.VerifyHashedPassword(user, user.Password, password);
-                _httpContextAccessor.HttpContext?.User.AddIdentity(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, user.UserName) }));
-            
-                UserInfo = user;
-                return _mapper.Map<UserDTO>(user);
+            if (result == PasswordVerificationResult.Success)
+            {                
+                return _mapper.Map<UserDTO>(user);                
+            }
         }
         
         return null;
@@ -59,13 +59,17 @@ public class UserService : IUserService
 
     public async Task<bool> IsExistUserNameAsync(string username)
     {
-        await _userRepository.FindAsync(x => x.UserName == username).ContinueWith(task =>
-        {
-            if (task.Result.Any())
-                return true;
-            else
-                return false;
-        });
-        return false;
+        var users = await _userRepository.FindAsync(x => x.UserName == username.Trim());
+        return users.Any();
+    }
+
+    public async Task AddUserAsync(UserDTO userDTO)
+    {
+        var user = _mapper.Map<User>(userDTO);
+        user.UpdateDate = DateTime.Now;        
+        var hasher = new PasswordHasher<User>();
+        user.Password = hasher.HashPassword(user, userDTO.Password);
+        await _userRepository.AddAsync(user);
+        await _userRepository.SaveChangesAsync();
     }
 }

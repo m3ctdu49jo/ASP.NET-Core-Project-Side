@@ -1,13 +1,13 @@
-
+@model UserDTO
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Login</h1>
 
-<form method="post" asp-action="Login" asp-asp-controller="Login">
-    <input type="text" id="username" name="username" placeholder="帳號" />
-    <input type="password" id="password" name="password" placeholder="密碼" />
+<form method="post" asp-action="Index" asp-asp-controller="Login">
+    <input type="text" asp-for="UserName" placeholder="帳號" />
+    <input type="password" asp-for="Password" placeholder="密碼" />
     <input type="submit" value="登入" />
 </form>
 

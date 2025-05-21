@@ -10,6 +10,7 @@ using ShoppingMall.Mappings;
 using AutoMapper;
 using ShoppingMall;
 using ShoppingMall.DTOs;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,13 @@ builder.Services.AddScoped<IUserService, UserService>();
 // 添加記憶體快取
 builder.Services.AddMemoryCache();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/Index";
+        options.LogoutPath = "/Login/Logout";
+    });
+
 var app = builder.Build();
 
 // 初始化資料庫
@@ -76,8 +84,13 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+
 app.UseRouting();
 
+// 在 app.UseRouting() 之後、app.UseEndpoints() 之前，加上 Session
+app.UseSession();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
