@@ -11,7 +11,7 @@ public class UserDTO
     [DisplayName("密碼")]
     public string Password { get;set; } = string.Empty;
     [DisplayName("姓名")]
-    public string? Name { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
     [DisplayName("E-mail")]
     public string? Email { get;set; } = string.Empty;
     [DisplayName("手機號碼")]

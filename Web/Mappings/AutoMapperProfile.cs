@@ -13,6 +13,7 @@ namespace ShoppingMall.Mappings
             CreateMap<OrderDetail, OrderDetailDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
         }
     }
 } 

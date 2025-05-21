@@ -80,7 +80,7 @@ namespace ShoppingMall.Infrastructure.Data
 
             modelBuilder.Entity<User>(entity => 
             {
-                entity.HasKey(e => e.Id);
+                entity.HasKey(e => new { e.Id, e.UserName });
                 entity.Property(e => e.UserName).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(20);
                 entity.Property(e => e.Password).IsRequired().HasMaxLength(100);
