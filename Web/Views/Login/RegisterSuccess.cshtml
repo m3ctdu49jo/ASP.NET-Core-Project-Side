@@ -1,11 +1,15 @@
 
 @{
-    ViewData["Title"] = "RegisterSuccess";
+    ViewData["Title"] = "會員註冊訊息";
 }
 
-<h1>RegisterSuccess</h1>
+@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
 
-@if(ViewBag.SuccessMsg != null)
+@if((TempData["RegiserSuccessfully"] != null) && (bool)TempData["RegiserSuccessfully"])
 {
-    @ViewBag.SuccessMsg
+    <p>
+        註冊成功!<a asp-action="Index" asp-area="" asp-controller="Login">請點此登入帳號</a>
+    </p>
 }
+
+@TempData["RegiserMsg"]

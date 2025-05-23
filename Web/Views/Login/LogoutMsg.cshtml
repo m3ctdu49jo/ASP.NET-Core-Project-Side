@@ -1,0 +1,30 @@
+
+@{
+    ViewData["Title"] = "登出訊息";
+}
+
+@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"] = "登出訊息");
+@if (TempData["LogoutSuccessfully"] != null && (bool)TempData["LogoutSuccessfully"])
+{
+    <strong>已登出</strong>
+    <p>
+        登出成功!<br />
+        將在3秒後自動跳轉頁面至首頁或<a asp-action="Index" asp-area="" asp-controller="Home">請點此回首頁</a>
+    </p>
+}
+else
+{
+    <p>
+        登出失敗!請聯繫系統管理員
+    </p>
+}
+@section HeadScripts {
+    <script>
+        window.onload = function()
+        {
+            setTimeout(() => {
+                location.href = '@Url.Action("Index", "Home")';
+            }, 3000);
+        }
+    </script>
+}

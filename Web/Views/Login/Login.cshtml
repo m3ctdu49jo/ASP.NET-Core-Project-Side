@@ -1,21 +1,32 @@
 @model UserDTO
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "登入";
 }
 
-<h1>Login</h1>
+@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
 
-<form method="post" asp-action="Index" asp-asp-controller="Login">
-    <input type="text" asp-for="UserName" placeholder="帳號" />
-    <input type="password" asp-for="Password" placeholder="密碼" />
-    <input type="submit" value="登入" />
+<form method="post" asp-action="Index" asp-controller="Login">
+    <styled-input type="text" asp-for="UserName" placeholder="帳號"></styled-input>
+    <styled-input type="password" asp-for="Password" placeholder="密碼"></styled-input>
+    <input id="loginBtn" type="submit" value="登入" />
 </form>
 
-<p>
-    {
-        @if(ViewBag.ErrorMsg != null)
-        {
-            <span style="color: red;">@ViewBag.ErrorMsg</span>
-        }
-    }
-</p>
+@if(ViewBag.ErrorMsg != null)
+{
+    <p>
+        <span style="color: red;">@ViewBag.ErrorMsg</span>
+    </p>
+}
+
+
+@* @section HeadScripts {
+
+    <script>
+        window.addEventListener("pageshow", () => {
+            if(event.persisted){
+                // 動作..
+                document.querySelector("form").submit();
+            }
+        });
+    </script>
+} *@

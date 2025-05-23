@@ -1,10 +1,34 @@
 
 @{
-    ViewData["Title"] = "LoginSuccess";
+    ViewData["Title"] = "登入訊息";
 }
 
-<h1>LoginSuccess</h1>
+@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
 
 <p>
-    @ViewBag.LoginMsg
+    @if(TempData["LoginSuccessfully"] != null && (bool)TempData["LoginSuccessfully"])
+    {
+        <strong>歡迎回來! @User.Identity?.Name</strong>
+        <p>
+            登入成功!<a asp-action="Index" asp-area="" asp-controller="Home">請點此回首頁</a>
+        </p>
+    }
+    else
+    {
+        <p>
+            登入失敗!<a asp-action="Index" asp-area="" asp-controller="Login">請點此重新登入</a>
+        </p>
+
+    }
 </p>
+
+@section HeadScripts {
+
+    <script>
+        window.addEventListener("pageshow", () => {
+            if(event.persisted){
+                window.location.reload();
+            }
+        });
+    </script>
+}

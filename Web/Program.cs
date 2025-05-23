@@ -11,6 +11,7 @@ using AutoMapper;
 using ShoppingMall;
 using ShoppingMall.DTOs;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ShoppingMall.Web.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/Login/Logout";
     });
 
+builder.Services.AddScoped<LoginAuthenticatedRedirectFilter>();
+
 var app = builder.Build();
 
 // 初始化資料庫
@@ -92,6 +95,7 @@ app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",

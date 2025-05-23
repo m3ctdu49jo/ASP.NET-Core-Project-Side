@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using ShoppingMall.DTOs;
 using ShoppingMall.Infrastructure.Services;
 using ShoppingMall.Models;
+using ShoppingMall.Web.Filters;
 
 namespace ShoppingMall.Controllers
 {
+    [ResponseCache(NoStore = true, Duration = 0, Location = ResponseCacheLocation.None)]
     public class LoginController : Controller
     {
         private readonly IUserService _userService;
@@ -16,19 +18,25 @@ namespace ShoppingMall.Controllers
         public LoginController(IUserService userService, IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
-            _httpContextAccessor = httpContextAccessor;    
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [ActionName("Index")]
+        [ServiceFilter(typeof(LoginAuthenticatedRedirectFilter))]
         public IActionResult Login()
         {
+            // 不要快取頁面，每次都要重新向伺服器請求最新內容。
+            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
+
             return View("Login");
         }
 
         [HttpPost]
         [ActionName("Index")]
-        // GET: LoginController
-        public async Task<ActionResult> Login([Bind("UserName, Password")] UserDTO userDTO)
+        [ServiceFilter(typeof(LoginAuthenticatedRedirectFilter))]
+        public async Task<ActionResult> LoginCheck([Bind("UserName, Password")] UserDTO userDTO)
         {
             bool identify = true;
             var username = userDTO.UserName;
@@ -42,8 +50,8 @@ namespace ShoppingMall.Controllers
             {
                 try
                 {
-                    identify = await IdentityCheckAndSetUserInfoAsync(username, password);                    
-                    if(!identify)
+                    identify = await IdentityCheckAndSetUserInfoAsync(username, password);
+                    if (!identify)
                         ViewBag.ErrorMsg = string.Concat(userDTO.UserName, " ", "登入失敗，請稍後再試");
                 }
                 catch (Exception ex)
@@ -54,9 +62,11 @@ namespace ShoppingMall.Controllers
                 if (!identify)
                     ViewBag.ErrorMsg = "帳號或密碼錯誤";
             }
-            
-                if (!identify)
-                    return View("Login", userDTO);
+
+            if (!identify)
+                return View("Login", userDTO);
+
+            TempData["LoginSuccessfully"] = identify;
 
             return RedirectToAction(nameof(LoginSuccess), "Login");
         }
@@ -73,42 +83,43 @@ namespace ShoppingMall.Controllers
             }
             return success;
         }
-        
+
         private async Task SetAuthenticationUserInfoAsync(UserDTO user)
         {
-            
-                HttpContext.Session.Clear();
-                // 登入成功，將使用者資訊存入Session
-                HttpContext.Session.SetString("UserSession", user.UserName);
 
-                // 設定 Cookie 驗證
-                var claims = new List<Claim>
+            HttpContext.Session.Clear();
+            // 登入成功，將使用者資訊存入Session
+            HttpContext.Session.SetString("UserSession", user.UserName);
+
+            // 設定 Cookie 驗證
+            var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName)
                 };
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var authProperties = new AuthenticationProperties
-                {
-                    IsPersistent = true, // 記住登入
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1)
-                };
-                // _httpContextAccessor.HttpContext?.User.AddIdentity(new ClaimsIdentity());
-                // AddIdentity 只暫時加身份，不會讓使用者真正「登入」；要讓登入狀態持久，必須用 SignInAsync（Cookie 驗證）。
-                // AddIdentity 只是在記憶體中暫時加一個身份，不會持久化，下次請求就消失。
-                // SignInAsync 會把 ClaimsIdentity 寫入 Cookie，讓瀏覽器帶著 Cookie，之後每個請求都能自動還原 User.Identity。
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    authProperties
-                );
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true, // 記住登入
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1)
+            };
+            // _httpContextAccessor.HttpContext?.User.AddIdentity(new ClaimsIdentity());
+            // AddIdentity 只暫時加身份，不會讓使用者真正「登入」；要讓登入狀態持久，必須用 SignInAsync（Cookie 驗證）。
+            // AddIdentity 只是在記憶體中暫時加一個身份，不會持久化，下次請求就消失。
+            // SignInAsync 會把 ClaimsIdentity 寫入 Cookie，讓瀏覽器帶著 Cookie，之後每個請求都能自動還原 User.Identity。
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties
+            );
         }
 
         public IActionResult LoginSuccess()
         {
-            if (!string.IsNullOrEmpty(_httpContextAccessor.HttpContext?.User.Identity?.Name))
-                ViewBag.LoginMsg = "登入成功!!" + User.Identity?.Name;
-            else
-                ViewBag.LoginMsg = "登入失敗!!";
+            if (TempData["LoginSuccessfully"] is null)
+            {
+                // 如果沒有登入成功的 TempData，則重定向到 Login 頁面
+                return RedirectToAction("Index", "Login");
+            }
             return View();
         }
 
@@ -120,13 +131,13 @@ namespace ShoppingMall.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(UserDTO userDTO)
         {
-            bool success = false;       
-            if(!RegisterCheck(userDTO))
+            bool success = false;
+            if (!RegisterCheck(userDTO))
             {
                 ViewBag.ErrorMsg = "請填寫*必填欄位";
                 return View(userDTO);
             }
-            
+
             try
             {
                 bool isExist = await _userService.IsExistUserNameAsync(userDTO.UserName);
@@ -149,34 +160,48 @@ namespace ShoppingMall.Controllers
                     });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            
+
             if (success)
             {
+                TempData["RegiserSuccessfully"] = success;
                 return RedirectToAction(nameof(RegisterSuccess), "Login");
             }
-            
+
             return View(userDTO);
         }
-
         public IActionResult RegisterSuccess()
         {
-            ViewBag.SuccessMsg = "註冊成功，請登入";
             return View();
         }
 
         public async Task<IActionResult> Logout()
         {
+            if (User.Identity is null || !User.Identity.IsAuthenticated)
+            {
+                // 如果沒有登入成功的資訊，則重定向到 Login 頁面
+                return RedirectToAction("Index", "Login");
+            }
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             // 清除Session
             HttpContext.Session.Remove("UserSession");
-            return RedirectToAction("Index", "Home");
+
+            // 驗證使用者資訊已被清除
+            TempData["LogoutSuccessfully"] = HttpContext.Session.GetString("UserSession") == null;
+
+            // 不直接 return View()，否則會導致頁面仍保留使用者資訊
+            return RedirectToAction(nameof(LogoutMsg));
         }
 
-        public bool RegisterCheck(UserDTO userDTO)
+        public IActionResult LogoutMsg()
+        {
+            return View();
+        }
+
+        private bool RegisterCheck(UserDTO userDTO)
         {
             if (string.IsNullOrEmpty(userDTO.UserName) || string.IsNullOrEmpty(userDTO.Password) || string.IsNullOrEmpty(userDTO.Name))
             {
