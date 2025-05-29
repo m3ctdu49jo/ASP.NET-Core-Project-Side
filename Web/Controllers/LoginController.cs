@@ -37,6 +37,7 @@ namespace ShoppingMall.Web.Controllers
         [HttpPost]
         [ActionName("Index")]
         [ServiceFilter(typeof(LoginAuthenticatedRedirectFilter))]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> LoginCheck([Bind("UserName, Password")] UserDTO userDTO)
         {
             bool identify = true;
@@ -130,6 +131,7 @@ namespace ShoppingMall.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterUserViewModel userModel)
         {
             bool success = false;
