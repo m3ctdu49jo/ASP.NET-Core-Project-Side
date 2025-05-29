@@ -1,4 +1,4 @@
-@model UserDTO
+@model RegisterUserViewModel
 @{
     ViewData["Title"] = "會員註冊";
 }
@@ -12,40 +12,40 @@
 }
 <form method="post" asp-action="Register" asp-controller="Login">
     <div class="mb-2">
-        *<label asp-for="UserName"></label>
-        <styled-input type="text" asp-for="UserName" placeholder="帳號" required=true></styled-input>
+        *<label asp-for="UserInfo.UserName"></label>
+        <styled-input type="text" asp-for="UserInfo.UserName" placeholder="帳號" required=true></styled-input>
     </div>
     <div class="mb-2">
-        *<label asp-for="Password"></label>
-        <styled-input type="password" asp-for="Password" required=true></styled-input>
+        *<label asp-for="UserInfo.Password"></label>
+        <styled-input type="password" asp-for="UserInfo.Password" required=true></styled-input>
     </div>
     <div class="mb-2">
         *<label for="confirmPassword">確認密碼</label>
         <styled-input type="password" asp-for="ConfirmPassword" required=true></styled-input>
     </div>
     <div class="mb-2">
-        *<label asp-for="Name"></label>
-        <styled-input type="text" asp-for="Name" required=true></styled-input>
+        *<label asp-for="UserInfo.Name"></label>
+        <styled-input type="text" asp-for="UserInfo.Name" required=true></styled-input>
     </div>
     <div class="mb-2">
-        <label asp-for="Email"></label>
-        <styled-input type="email" asp-for="Email"></styled-input>
+        <label asp-for="UserInfo.Email"></label>
+        <styled-input type="email" asp-for="UserInfo.Email"></styled-input>
     </div>
     <div class="mb-2">
-        <label asp-for="Phone"></label>
-        <styled-input type="tel" asp-for="Phone"></styled-input>
+        <label asp-for="UserInfo.Phone"></label>
+        <styled-input type="tel" asp-for="UserInfo.Phone"></styled-input>
     </div>
     <div class="mb-2">
-        <label asp-for="Country"></label>
-        <styled-input type="text" asp-for="Country"></styled-input>
+        <label asp-for="UserInfo.Country"></label>
+        <styled-input type="text" asp-for="UserInfo.Country"></styled-input>
     </div>
     <div class="mb-2">
-        <label asp-for="City"></label>
-        <styled-input type="text" asp-for="City"></styled-input>
+        <label asp-for="UserInfo.City"></label>
+        <styled-input type="text" asp-for="UserInfo.City"></styled-input>
     </div>
     <div class="mb-2">
-        <label asp-for="Address"></label>
-        <styled-input type="text" asp-for="Address"></styled-input>
+        <label asp-for="UserInfo.Address"></label>
+        <styled-input type="text" asp-for="UserInfo.Address"></styled-input>
     </div>
     <div class="mb-2">
         <input type="submit" value="註冊" class="btn btn-primary" />

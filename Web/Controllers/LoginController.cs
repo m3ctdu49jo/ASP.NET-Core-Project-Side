@@ -7,6 +7,7 @@ using ShoppingMall.Web.DTOs;
 using ShoppingMall.Web.Infrastructure.Services;
 using ShoppingMall.Web.Models;
 using ShoppingMall.Web.Filters;
+using ShoppingMall.Web.ViewModels;
 
 namespace ShoppingMall.Web.Controllers
 {
@@ -129,18 +130,17 @@ namespace ShoppingMall.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(UserDTO userDTO)
+        public async Task<IActionResult> Register(RegisterUserViewModel userModel)
         {
             bool success = false;
-            if (!RegisterCheck(userDTO))
+            if (!RegisterInfoCheck(userModel.UserInfo, userModel.ConfirmPassword))
             {
-                ViewBag.ErrorMsg = "請填寫*必填欄位";
-                return View(userDTO);
+                return View(userModel);
             }
 
             try
             {
-                bool isExist = await _userService.IsExistUserNameAsync(userDTO.UserName);
+                bool isExist = await _userService.IsExistUserNameAsync(userModel.UserInfo.UserName);
                 if (isExist)
                     ViewBag.ErrorMsg = "帳號已存在，請重新輸入";
                 else
@@ -148,12 +148,12 @@ namespace ShoppingMall.Web.Controllers
 
                 if (ModelState.IsValid && success)
                 {
-                    userDTO.CreatDate = DateTime.Now;
-                    await _userService.AddUserAsync(userDTO).ContinueWith(task =>
+                    userModel.UserInfo.CreatDate = DateTime.Now;
+                    await _userService.AddUserAsync(userModel.UserInfo).ContinueWith(task =>
                     {
                         if (task.IsFaulted)
                         {
-                            ViewBag.ErrorMsg = string.Concat(userDTO.UserName, " ", "註冊失敗，請稍後再試");
+                            ViewBag.ErrorMsg = string.Concat(userModel.UserInfo.UserName, " ", "註冊失敗，請稍後再試");
                             success = false;
                             // throw new Exception(task.Exception?.Message);
                         }
@@ -171,7 +171,7 @@ namespace ShoppingMall.Web.Controllers
                 return RedirectToAction(nameof(RegisterSuccess), "Login");
             }
 
-            return View(userDTO);
+            return View(userModel);
         }
         public IActionResult RegisterSuccess()
         {
@@ -201,13 +201,20 @@ namespace ShoppingMall.Web.Controllers
             return View();
         }
 
-        private bool RegisterCheck(UserDTO userDTO)
+        private bool RegisterInfoCheck(UserDTO userDTO, string? confirmPassword = null)
         {
+            bool isValid = true;            
             if (string.IsNullOrEmpty(userDTO.UserName) || string.IsNullOrEmpty(userDTO.Password) || string.IsNullOrEmpty(userDTO.Name))
             {
-                return false;
+                ViewBag.ErrorMsg = "請填寫*必填欄位";
+                isValid = false;
             }
-            return true;
+            if (userDTO.Password != confirmPassword)
+            {
+                ViewBag.ErrorMsg = string.Concat(ViewBag.ErrorMsg ?? "", "密碼與確認密碼不一致");
+                isValid = false;
+            }
+            return isValid;
         }
     }
 }
