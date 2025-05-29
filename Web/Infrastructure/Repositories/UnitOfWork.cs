@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using ShoppingMall.Infrastructure.Data;
-using ShoppingMall.Models;
+using ShoppingMall.Web.Infrastructure.Data;
+using ShoppingMall.Web.Models;
 using System;
 using System.Threading.Tasks;
 
-namespace ShoppingMall.Infrastructure.Repositories
+namespace ShoppingMall.Web.Infrastructure.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {

@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
-using ShoppingMall.DTOs;
-using ShoppingMall.Infrastructure.Services;
+using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Infrastructure.Services;
 
-namespace ShoppingMall.Controllers
+namespace ShoppingMall.Web.Controllers
 {
     public class UsersController : Controller
     {
 
-        private readonly IGenericService<ShoppingMall.Models.User, UserDTO> _userService;
+        private readonly IGenericService<ShoppingMall.Web.Models.User, UserDTO> _userService;
 
-        public UsersController(IGenericService<ShoppingMall.Models.User, UserDTO> userService)
+        public UsersController(IGenericService<ShoppingMall.Web.Models.User, UserDTO> userService)
         {
             _userService = userService;
         }

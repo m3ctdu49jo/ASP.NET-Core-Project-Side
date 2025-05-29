@@ -1,8 +1,8 @@
-using ShoppingMall.DTOs;
+using ShoppingMall.Web.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ShoppingMall.Infrastructure.Services
+namespace ShoppingMall.Web.Infrastructure.Services
 {
     public interface IProductService
     {

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using ShoppingMall.Models;
+using ShoppingMall.Web.Models;
 
-namespace ShoppingMall.Infrastructure.Data
+namespace ShoppingMall.Web.Infrastructure.Data
 {
     public class NorthwindContext : DbContext
     {

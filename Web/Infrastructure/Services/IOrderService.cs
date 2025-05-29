@@ -1,7 +1,7 @@
-﻿using ShoppingMall.DTOs;
-using ShoppingMall.Models;
+﻿using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Models;
 
-namespace ShoppingMall.Infrastructure.Services
+namespace ShoppingMall.Web.Infrastructure.Services
 {
     public interface IOrderService : IService<Order, OrderDTO>
     {

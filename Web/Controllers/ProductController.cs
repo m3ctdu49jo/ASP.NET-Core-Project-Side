@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using ShoppingMall.DTOs;
-using ShoppingMall.Infrastructure.Services;
+using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Infrastructure.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ShoppingMall.Controllers
+namespace ShoppingMall.Web.Controllers
 {
     public class ProductController : Controller
     {

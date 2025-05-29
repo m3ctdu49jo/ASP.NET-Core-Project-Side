@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ShoppingMall;
+namespace ShoppingMall.Web.DTOs;
 
 public class SupplierDTO
 {

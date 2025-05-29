@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using ShoppingMall.Models;
+using ShoppingMall.Web.Models;
 
-namespace ShoppingMall.Infrastructure.Repositories
+namespace ShoppingMall.Web.Infrastructure.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {

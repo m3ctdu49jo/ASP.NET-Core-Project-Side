@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using ShoppingMall.Data2.Models;
+using ShoppingMall.Web.Data2.Models;
 
-namespace ShoppingMall.Data2;
+namespace ShoppingMall.Web.Data2;
 
 public partial class NorthwindContext : DbContext
 {

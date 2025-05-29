@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ShoppingMall.Controllers
+namespace ShoppingMall.Web.Controllers
 {
     public class OrdinaryPatialController : Controller
     {

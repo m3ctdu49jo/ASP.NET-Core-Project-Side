@@ -5,18 +5,19 @@
 
 @await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
 
-<form method="post" asp-action="Index" asp-controller="Login">
+<form method="post" asp-action="Index" asp-asp-controller="Login">
+    <h1>123</h1>
     <styled-input type="text" asp-for="UserName" placeholder="帳號"></styled-input>
     <styled-input type="password" asp-for="Password" placeholder="密碼"></styled-input>
     <input id="loginBtn" type="submit" value="登入" />
 </form>
 
-@if(ViewBag.ErrorMsg != null)
-{
-    <p>
+<p>
+    @if(ViewBag.ErrorMsg != null)
+    {
         <span style="color: red;">@ViewBag.ErrorMsg</span>
-    </p>
-}
+    }
+</p>
 
 
 @* @section HeadScripts {

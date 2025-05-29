@@ -1,13 +1,13 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using ShoppingMall.DTOs;
-using ShoppingMall.Infrastructure.Repositories;
-using ShoppingMall.Infrastructure.Services;
-using ShoppingMall.Models;
+using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Infrastructure.Repositories;
+using ShoppingMall.Web.Infrastructure.Services;
+using ShoppingMall.Web.Models;
 using Microsoft.AspNetCore.Http;
 
-namespace ShoppingMall;
+namespace ShoppingMall.Web.Infrastructure.Services;
 
 public class UserService : IUserService
 {

@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace ShoppingMall.Web.TagHelpers
 {
+    [HtmlTargetElement("styled-input")]
     public class StyledInputTagHelper : TagHelper
     {
-        public string AspFor { get; set; } = string.Empty;
+        [HtmlAttributeName("asp-for")]
+        public ModelExpression AspFor { get; set; }
         public string Type { get; set; } = "text";
         public bool Required { get; set; } = false;
         public string Value { get; set; } = string.Empty;
@@ -15,8 +18,20 @@ namespace ShoppingMall.Web.TagHelpers
             output.TagName = "input";
             output.TagMode = TagMode.SelfClosing;
             output.Attributes.SetAttribute("type", Type);
-            output.Attributes.SetAttribute("name", AspFor);
-            output.Attributes.SetAttribute("id", AspFor);
+
+            if (AspFor != null)
+            {
+                output.Attributes.SetAttribute("name", AspFor.Name);
+                output.Attributes.SetAttribute("id", AspFor.Name);
+                if (Value == string.Empty && AspFor.Model != null)
+                    output.Attributes.SetAttribute("value", AspFor.Model.ToString());
+            }
+            else
+            {
+                output.Attributes.SetAttribute("name", "");
+                output.Attributes.SetAttribute("id", "");
+            }
+
             output.Attributes.SetAttribute("class", "px-2 py-1 rounded-3 border-secondary border-1");
             if (!string.IsNullOrEmpty(Value))
                 output.Attributes.SetAttribute("value", Value);

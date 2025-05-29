@@ -1,14 +1,14 @@
 using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
-using ShoppingMall.DTOs;
-using ShoppingMall.Infrastructure.Repositories;
-using ShoppingMall.Models;
+using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Infrastructure.Repositories;
+using ShoppingMall.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShoppingMall.Infrastructure.Services
+namespace ShoppingMall.Web.Infrastructure.Services
 {
     public class ProductService : IProductService
     {

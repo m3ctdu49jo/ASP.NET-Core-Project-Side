@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ShoppingMall.Models
+namespace ShoppingMall.Web.Models
 {
     public class OrderDetail
     {

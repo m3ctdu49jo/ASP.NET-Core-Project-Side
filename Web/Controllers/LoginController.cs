@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ShoppingMall.DTOs;
-using ShoppingMall.Infrastructure.Services;
-using ShoppingMall.Models;
+using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Infrastructure.Services;
+using ShoppingMall.Web.Models;
 using ShoppingMall.Web.Filters;
 
-namespace ShoppingMall.Controllers
+namespace ShoppingMall.Web.Controllers
 {
     [ResponseCache(NoStore = true, Duration = 0, Location = ResponseCacheLocation.None)]
     public class LoginController : Controller

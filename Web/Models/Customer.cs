@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ShoppingMall.Models
+namespace ShoppingMall.Web.Models
 {
     public class Customer
     {

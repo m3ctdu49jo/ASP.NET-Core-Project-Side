@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ShoppingMall.DTOs;
-using ShoppingMall.Infrastructure.Data;
-using ShoppingMall.Infrastructure.Services;
-using ShoppingMall.Models;
+using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Infrastructure.Data;
+using ShoppingMall.Web.Infrastructure.Services;
+using ShoppingMall.Web.Models;
 
-namespace ShoppingMall.Controllers
+namespace ShoppingMall.Web.Controllers
 {
     public class OrderController : Controller
     {

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using ShoppingMall.Controllers;
-using ShoppingMall.DTOs;
-using ShoppingMall.Infrastructure.Services;
+using ShoppingMall.Web.Controllers;
+using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Infrastructure.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;

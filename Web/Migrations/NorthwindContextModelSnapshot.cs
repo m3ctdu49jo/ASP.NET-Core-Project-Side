@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ShoppingMall.Infrastructure.Data;
+using ShoppingMall.Web.Infrastructure.Data;
 
 #nullable disable
 
-namespace ShoppingMall.Migrations
+namespace ShoppingMall.Web.Migrations
 {
     [DbContext(typeof(NorthwindContext))]
     partial class NorthwindContextModelSnapshot : ModelSnapshot

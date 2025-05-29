@@ -1,4 +1,4 @@
-﻿namespace ShoppingMall.Infrastructure.Services;
+﻿namespace ShoppingMall.Web.Infrastructure.Services;
 
 public interface IGenericService<TModel, TModelDTO> where TModel : class where TModelDTO : class
 {

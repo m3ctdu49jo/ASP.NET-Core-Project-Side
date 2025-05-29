@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using ShoppingMall.Models;
+using ShoppingMall.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ShoppingMall.Infrastructure.Data
+namespace ShoppingMall.Web.Infrastructure.Data
 {
     public static class DbInitializer
     {

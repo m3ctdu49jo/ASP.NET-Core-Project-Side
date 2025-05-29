@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using ShoppingMall.DTOs;
+using ShoppingMall.Web.DTOs;
 using Xunit;
 
 namespace ShoppingMall.Tests.DTOs

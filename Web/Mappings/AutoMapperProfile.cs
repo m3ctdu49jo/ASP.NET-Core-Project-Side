@@ -1,8 +1,8 @@
 using AutoMapper;
-using ShoppingMall.DTOs;
-using ShoppingMall.Models;
+using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Models;
 
-namespace ShoppingMall.Mappings
+namespace ShoppingMall.Web.Mappings
 {
     public class AutoMapperProfile : Profile
     {

@@ -1,7 +1,7 @@
 using AutoMapper;
-using ShoppingMall.DTOs;
-using ShoppingMall.Mappings;
-using ShoppingMall.Models;
+using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Mappings;
+using ShoppingMall.Web.Models;
 using Xunit;
 
 namespace ShoppingMall.Tests.Mappings

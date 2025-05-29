@@ -2,21 +2,22 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ShoppingMall.Infrastructure.Data;
-using ShoppingMall.Infrastructure.Repositories;
-using ShoppingMall.Infrastructure.Services;
-using ShoppingMall.Models;
-using ShoppingMall.Mappings;
+using ShoppingMall.Web.Infrastructure.Data;
+using ShoppingMall.Web.Infrastructure.Repositories;
+using ShoppingMall.Web.Infrastructure.Services;
+using ShoppingMall.Web.Models;
+using ShoppingMall.Web.Mappings;
 using AutoMapper;
-using ShoppingMall;
-using ShoppingMall.DTOs;
+using ShoppingMall.Web;
+using ShoppingMall.Web.DTOs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using ShoppingMall.Web.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddRazorRuntimeCompilation(); // 添加這行以支援即時編譯
 
 
 builder.Services.AddHttpContextAccessor();

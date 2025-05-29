@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace ShoppingMall.Infrastructure.Repositories
+namespace ShoppingMall.Web.Infrastructure.Repositories
 {
     public interface IRepository<T> where T : class
     {

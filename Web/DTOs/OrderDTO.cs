@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ShoppingMall.DTOs
+namespace ShoppingMall.Web.DTOs
 {
     public class OrderDTO
     {

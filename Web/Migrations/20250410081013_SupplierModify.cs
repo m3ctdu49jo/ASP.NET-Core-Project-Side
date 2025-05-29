@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace ShoppingMall.Migrations
+namespace ShoppingMall.Web.Migrations
 {
     /// <inheritdoc />
     public partial class SupplierModify : Migration

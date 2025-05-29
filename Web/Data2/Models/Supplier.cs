@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ShoppingMall.Data2.Models;
+namespace ShoppingMall.Web.Data2.Models;
 
 public partial class Supplier
 {

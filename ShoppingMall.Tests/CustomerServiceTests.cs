@@ -1,10 +1,10 @@
 using Xunit;
 using Moq;
 using AutoMapper;
-using ShoppingMall.Infrastructure.Services;
-using ShoppingMall.Infrastructure.Repositories;
-using ShoppingMall.Models;
-using ShoppingMall.DTOs;
+using ShoppingMall.Web.Infrastructure.Services;
+using ShoppingMall.Web.Infrastructure.Repositories;
+using ShoppingMall.Web.Models;
+using ShoppingMall.Web.DTOs;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,9 +1,9 @@
 using AutoMapper;
-using ShoppingMall.DTOs;
-using ShoppingMall.Models;
-using ShoppingMall.Infrastructure.Repositories;
+using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Models;
+using ShoppingMall.Web.Infrastructure.Repositories;
 
-namespace ShoppingMall.Infrastructure.Services
+namespace ShoppingMall.Web.Infrastructure.Services
 {
     
     public class CustomerService : ICustomerService

@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ShoppingMall.Infrastructure.Data;
+using ShoppingMall.Web.Infrastructure.Data;
 
 #nullable disable
 
-namespace ShoppingMall.Migrations
+namespace ShoppingMall.Web.Migrations
 {
     [DbContext(typeof(NorthwindContext))]
     [Migration("20250520085158_modifyUserProperty4")]

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingMall", "Web\ShoppingMall.csproj", "{B12832BF-93D3-451C-99FB-6B7C0DC258B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingMall.Web", "Web\ShoppingMall.Web.csproj", "{B12832BF-93D3-451C-99FB-6B7C0DC258B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingMall.Tests", "ShoppingMall.Tests\ShoppingMall.Tests.csproj", "{90637404-D5DA-443F-A88A-456FAB7B0C17}"
 EndProject

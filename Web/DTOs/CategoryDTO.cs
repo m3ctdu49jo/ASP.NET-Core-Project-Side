@@ -1,4 +1,4 @@
-namespace ShoppingMall.DTOs
+namespace ShoppingMall.Web.DTOs
 {
     public class CategoryDTO
     {

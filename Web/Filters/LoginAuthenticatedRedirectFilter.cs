@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ShoppingMall.Controllers;
+using ShoppingMall.Web.Controllers;
 using System.Security.Claims;
 
 namespace ShoppingMall.Web.Filters

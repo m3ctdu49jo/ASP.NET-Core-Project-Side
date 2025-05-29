@@ -1,8 +1,8 @@
-﻿using ShoppingMall.DTOs;
-using ShoppingMall.Infrastructure.Services;
-using ShoppingMall.Models;
+﻿using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Infrastructure.Services;
+using ShoppingMall.Web.Models;
 
-namespace ShoppingMall;
+namespace ShoppingMall.Web.Infrastructure.Services;
 
 public interface IUserService : IService<User, UserDTO>
 {

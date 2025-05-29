@@ -1,9 +1,9 @@
 ﻿
 using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
-using ShoppingMall.Infrastructure.Repositories;
+using ShoppingMall.Web.Infrastructure.Repositories;
 
-namespace ShoppingMall.Infrastructure.Services;
+namespace ShoppingMall.Web.Infrastructure.Services;
 
 public class GenericService<TModel, TModelDTO> : IGenericService<TModel, TModelDTO> where TModel : class where TModelDTO : class
 {
