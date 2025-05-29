@@ -32,7 +32,7 @@ namespace ShoppingMall.Web.TagHelpers
                 output.Attributes.SetAttribute("id", "");
             }
 
-            output.Attributes.SetAttribute("class", "px-2 py-1 rounded-3 border-secondary border-1");
+            output.Attributes.SetAttribute("class", "px-2 py-2 rounded-3 border border-1 border-secondary");
             if (!string.IsNullOrEmpty(Value))
                 output.Attributes.SetAttribute("value", Value);
             if (!string.IsNullOrEmpty(Placeholder))

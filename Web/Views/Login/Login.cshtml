@@ -6,10 +6,14 @@
 @await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
 
 <form method="post" asp-action="Index" asp-asp-controller="Login">
-    <h1>123</h1>
-    <styled-input type="text" asp-for="UserName" placeholder="帳號"></styled-input>
-    <styled-input type="password" asp-for="Password" placeholder="密碼"></styled-input>
-    <input id="loginBtn" type="submit" value="登入" />
+    <div class="mb-1">
+        <styled-input type="text" asp-for="UserName" placeholder="帳號"></styled-input>
+    </div>
+    <div class="mb-3">
+        <styled-input type="password" asp-for="Password" placeholder="密碼"></styled-input>
+    </div>
+    <input id="loginBtn" type="submit" class="btn btn-primary" value="登入" />
+    <input id="registerBtn" type="button" class="btn btn-secondary" value="註冊" />
 </form>
 
 <p>
@@ -19,6 +23,13 @@
     }
 </p>
 
+@section Scripts {
+    <script>
+        document.getElementById("registerBtn").addEventListener("click", () => {
+            window.location.href = "/Login/Register";
+        });
+    </script>
+}
 
 @* @section HeadScripts {
 

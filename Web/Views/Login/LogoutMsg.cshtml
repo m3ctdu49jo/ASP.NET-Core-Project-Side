@@ -3,7 +3,7 @@
     ViewData["Title"] = "登出訊息";
 }
 
-@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"] = "登出訊息");
+@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"] = "登出訊息")
 @if (TempData["LogoutSuccessfully"] != null && (bool)TempData["LogoutSuccessfully"])
 {
     <strong>已登出</strong>
