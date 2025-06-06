@@ -3,7 +3,7 @@ using ShoppingMall.Web.Models;
 
 namespace ShoppingMall.Web.Infrastructure.Services
 {
-    public interface IOrderService : IService<Order, OrderDTO>
+    public interface IOrderService : IService<Order>
     {
 
     }

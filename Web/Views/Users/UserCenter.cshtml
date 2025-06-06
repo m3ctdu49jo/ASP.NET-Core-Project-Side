@@ -1,0 +1,17 @@
+@model ShoppingMall.Web.DTOs.UserDTO
+
+@{
+    ViewData["Title"] = "會員資訊";
+}
+
+@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
+<div class="mb-3">
+    <div>@Html.DisplayNameFor(model => model.Name)：@Html.DisplayFor(model => Model.Name)</div>
+    <div>@Html.DisplayNameFor(model => model.Password)：********** <a class="btn-link" href="@Url.Action("ChangePassword")">更改密碼</a></div>
+    <div>@Html.DisplayNameFor(model => model.Email)：@Html.DisplayFor(model => Model.Email)</div>
+    <div>@Html.DisplayNameFor(model => model.Phone)：@Html.DisplayFor(model => Model.Phone)</div>
+    <div>@Html.DisplayNameFor(model => model.City)：@Html.DisplayFor(model => Model.City)</div>
+    <div>@Html.DisplayNameFor(model => model.Address)：@Html.DisplayFor(model => Model.Address)</div>
+    <div>@Html.DisplayNameFor(model => model.LastLoginDate)：@Html.DisplayFor(model => Model.LastLoginDate)</div>
+</div>
+<a class="btn btn-primary" href="@Url.Action("Edit")">修改資料</a>

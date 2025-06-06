@@ -10,7 +10,7 @@ public class UserDTO
     public string UserName { get; set; } = string.Empty;
     [DisplayName("密碼")]
     public string Password { get;set; } = string.Empty;
-    [DisplayName("姓名")]
+    [DisplayName("使用者名稱")]
     public string Name { get; set; } = string.Empty;
     [DisplayName("E-mail")]
     public string? Email { get;set; } = string.Empty;
@@ -20,8 +20,9 @@ public class UserDTO
     public string? Address { get; set; } = string.Empty;
     [DisplayName("國家")]
     public string? Country { get;set; } = string.Empty;
-    [DisplayName("城市")]
+    [DisplayName("縣市")]
     public string? City { get;set; } = string.Empty;
     public DateTime? CreatDate { get; set; }
+    [DisplayName("上次登入日期")]
     public DateTime? LastLoginDate { get; set; }
 }

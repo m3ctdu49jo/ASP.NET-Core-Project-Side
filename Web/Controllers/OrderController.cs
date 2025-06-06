@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,13 @@ namespace ShoppingMall.Web.Controllers
     {
         private readonly NorthwindContext _context;
         private readonly IOrderService _orderService;
+        private readonly IMapper _mapper;
 
-        public OrderController(NorthwindContext context, IOrderService orderService)
+        public OrderController(NorthwindContext context, IOrderService orderService, IMapper mapper)
         {
             _context = context;
             _orderService = orderService;
+            _mapper = mapper;
         }
 
         // GET: Order
@@ -68,7 +71,7 @@ namespace ShoppingMall.Web.Controllers
             {
                 // _context.Add(order);
                 // await _context.SaveChangesAsync();
-                await _orderService.Generic.AddAsync(order);
+                await _orderService.Generic.AddAsync(_mapper.Map<Order>(order));
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "CustomerID", order.CustomerID);

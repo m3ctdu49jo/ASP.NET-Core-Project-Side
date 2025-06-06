@@ -4,10 +4,13 @@ using ShoppingMall.Web.Models;
 
 namespace ShoppingMall.Web.Infrastructure.Services;
 
-public interface IUserService : IService<User, UserDTO>
+public interface IUserService : IService<User>
 {
-    public Task<UserDTO?> GetByUserNameAndPasswordAsync(string username, string password);
+    public Task<User?> GetByUserNameAndPasswordAsync(string username, string password);
+    public Task<User?> GetByIdAndUserNameAsync(int id, string username);
+    public Task<User?> GetUserForForgotPasswordAsync(string username, string name, string email);
     public Task<bool> IsExistUserNameAsync(string username);
-    public Task<bool> IsLoginUserAsync(string userSessionId);
-    public Task AddUserAsync(UserDTO userDTO);
+    // public Task<bool> IsLoginUserAsync(string userSessionId);
+    public Task AddUserAsync(User user);
+    public Task UpdateUserPasswordAsync(User user, string newPassword);
 }

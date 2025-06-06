@@ -1,11 +1,11 @@
 ﻿namespace ShoppingMall.Web.Infrastructure.Services;
 
-public interface IGenericService<TModel, TModelDTO> where TModel : class where TModelDTO : class
+public interface IGenericService<TModel> where TModel : class
 {
-    Task<TModelDTO> GetByIdAsync(int id);
-    Task<IEnumerable<TModelDTO>> GetAllAsync();
-    Task AddAsync(TModelDTO entity);
-    Task UpdateAsync(TModelDTO entity);
+    Task<TModel> GetByIdAsync(int id);
+    Task<IEnumerable<TModel>> GetAllAsync();
+    Task AddAsync(TModel entity);
+    Task UpdateAsync(TModel entity);
     Task DeleteAsync(int id);
 
     /*Task<T> GetByIdAsync(int id);

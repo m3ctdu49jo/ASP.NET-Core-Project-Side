@@ -14,4 +14,5 @@ public class User
     public DateTime? CreatDate { get; set; }
     public DateTime? UpdateDate { get; set; } = DateTime.Now;
     public DateTime? LastLoginDate { get; set; }
+    public DateTime? NewLoginDate { get; set; }
 }

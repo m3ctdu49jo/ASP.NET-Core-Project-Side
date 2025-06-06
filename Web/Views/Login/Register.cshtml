@@ -1,6 +1,6 @@
 @model RegisterUserViewModel
 @{
-    ViewData["Title"] = "會員註冊";
+    ViewData["Title"] = "註冊會員";
 }
 
 @await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
@@ -37,13 +37,12 @@
     </div>
     <div class="mb-2">
         <label asp-for="UserInfo.Country"></label>
-        <styled-input type="text" asp-for="UserInfo.Country"></styled-input>
+        <select asp-for="UserInfo.Country" asp-items="@Model.Cities"></select>
     </div>
     <div class="mb-2">
         <label asp-for="UserInfo.City"></label>
         <styled-input type="text" asp-for="UserInfo.City"></styled-input>
-    </div>
-    <div class="mb-2">
+<div class="mb-2">
         <label asp-for="UserInfo.Address"></label>
         <styled-input type="text" asp-for="UserInfo.Address"></styled-input>
     </div>

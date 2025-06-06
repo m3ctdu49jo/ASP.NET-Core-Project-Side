@@ -13,7 +13,9 @@ namespace ShoppingMall.Web.Mappings
             CreateMap<OrderDetail, OrderDetailDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
-            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UserDTO>()
+                .ReverseMap()
+                .ForMember(dest => dest.Password, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Password)));
         }
     }
 } 

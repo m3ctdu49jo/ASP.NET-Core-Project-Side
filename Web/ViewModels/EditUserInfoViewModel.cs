@@ -5,12 +5,11 @@ using ShoppingMall.Web.Models;
 
 namespace ShoppingMall.Web.ViewModels
 {
-    public class RegisterUserViewModel
+    public class EditUserInfoViewModel
     {
         public UserDTO UserInfo { get; set; }
-        [DisplayName("確認密碼")]
-        public string ConfirmPassword { get; set; } = string.Empty;
-        
-        public List<SelectListItem> Cities { get; set; }
+
+        public List<SelectListItem>? Cities { get; set; }
+        public string? ResultMsg { get; set; }
     }
 }

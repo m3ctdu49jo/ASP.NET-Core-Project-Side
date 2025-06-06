@@ -1,0 +1,50 @@
+@model EditUserInfoViewModel
+@{
+    ViewData["Title"] = "會員資料修改";
+}
+
+@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
+
+@if(!string.IsNullOrEmpty(Model.ResultMsg))
+{
+    <p class="text-danger">@Model.ResultMsg</p>
+}
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group mb-2">
+        <label asp-for="UserInfo.UserName"></label>
+        <span>@Model.UserInfo.UserName</span>
+        <input type="hidden" asp-for="UserInfo.UserName" />
+    </div>
+    <div class="form-group mb-2">
+        <label asp-for="UserInfo.Password"></label>
+        <span>********** </span><a asp-action="ChangePassword" class="btn btn-primary">更改密碼</a>
+    </div>
+    <div class="form-group mb-2">
+        <label asp-for="UserInfo.Name"></label>
+        <styled-input type="text" asp-for="UserInfo.Name"></styled-input>
+        <span asp-validation-for="UserInfo.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-2">
+        <label asp-for="UserInfo.Email"></label>
+        <styled-input type="text" asp-for="UserInfo.Email"></styled-input>
+        <span asp-validation-for="UserInfo.Email" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-2">
+        <label asp-for="UserInfo.Phone"></label>
+        <styled-input type="text" asp-for="UserInfo.Phone"></styled-input>
+        <span asp-validation-for="UserInfo.Phone" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-2">
+        <label asp-for="UserInfo.City"></label>
+        <select asp-for="UserInfo.City" asp-items="@Model.Cities" class="p-2"></select>
+        <span asp-validation-for="UserInfo.City" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="UserInfo.Address"></label>
+        <styled-input type="text" asp-for="UserInfo.Address"></styled-input>
+        <span asp-validation-for="UserInfo.Address" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">保存</button>
+</form>

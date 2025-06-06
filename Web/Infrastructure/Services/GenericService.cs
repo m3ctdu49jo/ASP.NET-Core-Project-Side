@@ -5,7 +5,7 @@ using ShoppingMall.Web.Infrastructure.Repositories;
 
 namespace ShoppingMall.Web.Infrastructure.Services;
 
-public class GenericService<TModel, TModelDTO> : IGenericService<TModel, TModelDTO> where TModel : class where TModelDTO : class
+public class GenericService<TModel> : IGenericService<TModel> where TModel : class
 {
 
     private readonly IRepository<TModel> _repository;
@@ -15,10 +15,9 @@ public class GenericService<TModel, TModelDTO> : IGenericService<TModel, TModelD
         _repository = repository;
         _mapper = mapper;
     }
-    public async Task AddAsync(TModelDTO entity)
+    public async Task AddAsync(TModel entity)
     {
-        var model = _mapper.Map<TModel>(entity);
-        await _repository.AddAsync(model);
+        await _repository.AddAsync(entity);
         await _repository.SaveChangesAsync();
     }
 
@@ -28,22 +27,21 @@ public class GenericService<TModel, TModelDTO> : IGenericService<TModel, TModelD
         await _repository.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<TModelDTO>> GetAllAsync()
+    public async Task<IEnumerable<TModel>> GetAllAsync()
     {
-        return _mapper.Map<IEnumerable<TModelDTO>>(await _repository.GetAllAsync());
+        return await _repository.GetAllAsync();
     }
 
-    public async Task<TModelDTO> GetByIdAsync(int id)
+    public async Task<TModel> GetByIdAsync(int id)
     {
-        return _mapper.Map<TModelDTO>(await _repository.GetByIdAsync(id));
+        return await _repository.GetByIdAsync(id);
     }
 
-    public async Task UpdateAsync(TModelDTO entity)
+    public async Task UpdateAsync(TModel entity)
     {
         if (entity == null)
             throw new ArgumentNullException(nameof(entity));
-        var model = _mapper.Map<TModel>(entity);
-        await _repository.UpdateAsync(model);
+        await _repository.UpdateAsync(entity);
         await _repository.SaveChangesAsync();
     }
 }

@@ -8,6 +8,10 @@ using ShoppingMall.Web.Infrastructure.Services;
 using ShoppingMall.Web.Models;
 using ShoppingMall.Web.Filters;
 using ShoppingMall.Web.ViewModels;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using ShoppingMall.Web.Utils;
+using System.Text.Json;
 
 namespace ShoppingMall.Web.Controllers
 {
@@ -16,10 +20,14 @@ namespace ShoppingMall.Web.Controllers
     {
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public LoginController(IUserService userService, IHttpContextAccessor httpContextAccessor)
+        private readonly IMapper _mapper;
+        private IConfiguration _config;
+        public LoginController(IUserService userService, IHttpContextAccessor httpContextAccessor, IMapper mapper, IConfiguration config)
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
+            _config = config;
         }
 
         [ActionName("Index")]
@@ -40,20 +48,20 @@ namespace ShoppingMall.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> LoginCheck([Bind("UserName, Password")] UserDTO userDTO)
         {
-            bool identify = true;
+            bool identified = true;
             var username = userDTO.UserName;
             var password = userDTO.Password;
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 ViewBag.ErrorMsg = "帳號與密碼不得為空";
-                identify = false;
+                identified = false;
             }
-            if (ModelState.IsValid && identify)
+            if (ModelState.IsValid && identified)
             {
                 try
                 {
-                    identify = await IdentityCheckAndSetUserInfoAsync(username, password);
-                    if (!identify)
+                    identified = await IdentityCheckAndSetUserInfoAsync(username, password);
+                    if (!identified)
                         ViewBag.ErrorMsg = string.Concat(userDTO.UserName, " ", "登入失敗，請稍後再試");
                 }
                 catch (Exception ex)
@@ -61,14 +69,14 @@ namespace ShoppingMall.Web.Controllers
                     throw new Exception(ex.Message);
                 }
 
-                if (!identify)
+                if (!identified)
                     ViewBag.ErrorMsg = "帳號或密碼錯誤";
             }
 
-            if (!identify)
+            if (!identified)
                 return View("Login", userDTO);
 
-            TempData["LoginSuccessfully"] = identify;
+            TempData["LoginSuccessfully"] = identified;
 
             return RedirectToAction(nameof(LoginSuccess), "Login");
         }
@@ -81,12 +89,13 @@ namespace ShoppingMall.Web.Controllers
             if (user != null)
             {
                 await SetAuthenticationUserInfoAsync(user);
+                await UpdateUserLastLoginDateAsync(user);
                 success = true;
             }
             return success;
         }
 
-        private async Task SetAuthenticationUserInfoAsync(UserDTO user)
+        private async Task SetAuthenticationUserInfoAsync(User user)
         {
 
             HttpContext.Session.Clear();
@@ -96,7 +105,8 @@ namespace ShoppingMall.Web.Controllers
             // 設定 Cookie 驗證
             var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.UserName)
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
                 };
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var authProperties = new AuthenticationProperties
@@ -113,6 +123,15 @@ namespace ShoppingMall.Web.Controllers
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties
             );
+
+        }
+
+        private async Task UpdateUserLastLoginDateAsync(User user)
+        {
+            // 更新使用者的登入時間
+            user.LastLoginDate = user.NewLoginDate;
+            user.NewLoginDate = DateTime.Now;
+            await _userService.Generic.UpdateAsync(user);
         }
 
         public IActionResult LoginSuccess()
@@ -127,22 +146,40 @@ namespace ShoppingMall.Web.Controllers
 
         public IActionResult Register()
         {
-            return View();
+            var selectItem = ReadCountryData().Select(x => new SelectListItem
+            {
+                Value = x.CityName,
+                Text = x.CityName
+            }).ToList();
+            
+            RegisterUserViewModel model = new RegisterUserViewModel
+            {
+                Cities = selectItem
+            };
+            model.Cities.Insert(0, new SelectListItem
+            {
+                Value = string.Empty,
+                Text = "請選擇縣市"
+            });
+            if(model.Cities.Any(x => x.Text == "釣魚臺"))
+                model.Cities.Remove(model.Cities.Find(x => x.Text == "釣魚臺"));
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterUserViewModel userModel)
+        public async Task<IActionResult> Register(RegisterUserViewModel RegisterVM)
         {
             bool success = false;
-            if (!RegisterInfoCheck(userModel.UserInfo, userModel.ConfirmPassword))
+            if (!RegisterInfoCheck(RegisterVM.UserInfo, RegisterVM.ConfirmPassword))
             {
-                return View(userModel);
+                return View(RegisterVM);
             }
 
             try
             {
-                bool isExist = await _userService.IsExistUserNameAsync(userModel.UserInfo.UserName);
+                bool isExist = await _userService.IsExistUserNameAsync(RegisterVM.UserInfo.UserName);
                 if (isExist)
                     ViewBag.ErrorMsg = "帳號已存在，請重新輸入";
                 else
@@ -150,12 +187,12 @@ namespace ShoppingMall.Web.Controllers
 
                 if (ModelState.IsValid && success)
                 {
-                    userModel.UserInfo.CreatDate = DateTime.Now;
-                    await _userService.AddUserAsync(userModel.UserInfo).ContinueWith(task =>
+                    RegisterVM.UserInfo.CreatDate = DateTime.Now;
+                    await _userService.AddUserAsync(_mapper.Map<User>(RegisterVM.UserInfo)).ContinueWith(task =>
                     {
                         if (task.IsFaulted)
                         {
-                            ViewBag.ErrorMsg = string.Concat(userModel.UserInfo.UserName, " ", "註冊失敗，請稍後再試");
+                            ViewBag.ErrorMsg = string.Concat(RegisterVM.UserInfo.UserName, " ", "註冊失敗，請稍後再試");
                             success = false;
                             // throw new Exception(task.Exception?.Message);
                         }
@@ -173,7 +210,13 @@ namespace ShoppingMall.Web.Controllers
                 return RedirectToAction(nameof(RegisterSuccess), "Login");
             }
 
-            return View(userModel);
+            return View(RegisterVM);
+        }
+        private List<TaiwanCity> ReadCountryData()
+        {
+            var taiwanCity = new List<TaiwanCity>();
+            _config.GetSection("Cities").Bind(taiwanCity);
+            return taiwanCity;
         }
         public IActionResult RegisterSuccess()
         {
@@ -203,9 +246,54 @@ namespace ShoppingMall.Web.Controllers
             return View();
         }
 
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                model.ResultMsg = "請正確填寫欄位";
+                return View(model);
+            }
+
+            User user = await _userService.GetUserForForgotPasswordAsync(model.UserName, model.Name, model.Email);
+
+            if(user == null)
+            {
+                model.ResultMsg = "找不到符合條件的使用者，請確認輸入的帳號、姓名和電子郵件是否正確";
+                return View(model);
+            }
+            TempData["ForgotPasswordUser"] = JsonSerializer.Serialize(user);
+
+            return RedirectToAction(nameof(ResetPassword));
+        }
+        public async Task<ActionResult> ResetPassword()
+        {
+            string? forgotPasswordUser = TempData["ForgotPasswordUser"] as string;
+            if (string.IsNullOrEmpty(forgotPasswordUser))
+            {
+                return RedirectToAction("ForgotPassword");
+            }
+
+            User user = JsonSerializer.Deserialize<User>(forgotPasswordUser);
+
+            string tempPassword = CommUtil.RandomString(10);
+
+            await _userService.UpdateUserPasswordAsync(user, tempPassword);
+
+            ViewBag.UserName = user.UserName;
+            ViewBag.TempPassword = tempPassword;
+
+            return View();
+        }
+
         private bool RegisterInfoCheck(UserDTO userDTO, string? confirmPassword = null)
         {
-            bool isValid = true;            
+            bool isValid = true;
             if (string.IsNullOrEmpty(userDTO.UserName) || string.IsNullOrEmpty(userDTO.Password) || string.IsNullOrEmpty(userDTO.Name))
             {
                 ViewBag.ErrorMsg = "請填寫*必填欄位";

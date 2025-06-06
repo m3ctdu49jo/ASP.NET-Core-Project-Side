@@ -42,7 +42,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // 註冊Services
-builder.Services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
+builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
@@ -57,7 +57,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/Login/Logout";
     });
 
+
 builder.Services.AddScoped<LoginAuthenticatedRedirectFilter>();
+builder.Services.AddScoped<AuthenticatedFilter>();
+
+// JSON檔案
+builder.Configuration.AddJsonFile(Path.Combine("DataFile/", "TaiwanCity.json"), optional: true, reloadOnChange: true);
 
 var app = builder.Build();
 
@@ -101,5 +106,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "Users",
+    pattern: "Users/Edit/{id?}/{username?}");
 
 app.Run();
