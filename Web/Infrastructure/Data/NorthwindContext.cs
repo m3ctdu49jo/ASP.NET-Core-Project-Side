@@ -17,6 +17,7 @@ namespace ShoppingMall.Web.Infrastructure.Data
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -76,9 +77,9 @@ namespace ShoppingMall.Web.Infrastructure.Data
                 entity.Property(e => e.PostalCode).HasMaxLength(10);
                 entity.Property(e => e.Country).HasMaxLength(15);
             });
-            
 
-            modelBuilder.Entity<User>(entity => 
+
+            modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => new { e.Id, e.UserName });
                 entity.Property(e => e.UserName).IsRequired().HasMaxLength(100);
@@ -94,7 +95,13 @@ namespace ShoppingMall.Web.Infrastructure.Data
                 entity.Property(e => e.LastLoginDate).HasColumnType("datetime");
 
             });
-
+            modelBuilder.Entity<ShoppingCart>(entity =>
+            {
+                entity.HasKey(e => new { e.ProductID, e.UserName });
+                entity.Property(e => e.UserName).IsRequired().HasMaxLength(100);
+                entity.HasOne(e => e.Product)
+                    .WithMany(s => s.ShoppingCarts);
+            });
         }
     }
 } 

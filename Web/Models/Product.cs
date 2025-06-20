@@ -48,5 +48,6 @@ namespace ShoppingMall.Web.Models
         public virtual Supplier? Supplier { get; set; }
 
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; }
     }
 } 

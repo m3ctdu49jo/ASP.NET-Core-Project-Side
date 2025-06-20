@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ShoppingMall.Web.Infrastructure.Services
 {
-    public class ProductService : IProductService
+    public class ProductService : IProductService, IService<Product>
     {
         private readonly IRepository<Product> _productRepository;
         private readonly IMapper _mapper;
@@ -18,18 +18,22 @@ namespace ShoppingMall.Web.Infrastructure.Services
         private const string AllProductsCacheKey = "AllProducts";
         private const string FeaturedProductsCacheKey = "FeaturedProducts";
         private const string NewArrivalsCacheKey = "NewArrivals";
+        private readonly IGenericService<Product> _genericService;
 
-        public ProductService(IRepository<Product> productRepository, IMapper mapper, IMemoryCache cache)
+
+        public ProductService(IRepository<Product> productRepository, IMapper mapper, IMemoryCache cache, IGenericService<Product> genericService)
         {
             _productRepository = productRepository;
             _mapper = mapper;
             _cache = cache;
+            _genericService = genericService;
         }
+        public IGenericService<Product> Generic => _genericService;
 
-        public async Task<ProductDTO?> GetProductByIdAsync(int id)
+        public async Task<Product?> GetProductByIdAsync(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);
-            return _mapper.Map<ProductDTO>(product);
+            return product;
         }
 
         public async Task<IEnumerable<ProductDTO>> GetAllProductsAsync()
@@ -46,7 +50,7 @@ namespace ShoppingMall.Web.Infrastructure.Services
         public async Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(int categoryId)
         {
             var products = await _productRepository.FindAsync(p => p.CategoryID == categoryId);
-            return _mapper.Map<IEnumerable<ProductDTO>>(products);
+            return _mapper.Map<IEnumerable<ProductDTO>>(products);;
         }
 
         public async Task<IEnumerable<ProductDTO>> SearchProductsAsync(string searchTerm)
@@ -67,7 +71,7 @@ namespace ShoppingMall.Web.Infrastructure.Services
             return _mapper.Map<ProductDTO>(product);
         }
 
-        public async Task<ProductDTO?> UpdateProductAsync(int id, ProductDTO productDto)
+        public async Task<ProductDTO?> UpdateProductAsync(int id, Product productDto)
         {
             var existingProduct = await _productRepository.GetByIdAsync(id);
             if (existingProduct == null)

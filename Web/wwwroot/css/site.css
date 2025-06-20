@@ -1,5 +1,6 @@
 html {
   font-size: 14px;
+  height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -15,8 +16,120 @@ html {
 html {
   position: relative;
   min-height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
+  height: 100%;
   margin-bottom: 60px;
+  margin: 0;
+  padding: 0;
 }
+
+.color-blue-3 {
+  color: #455c8d;
+}
+
+/*----- Message, Alert 訊息框 -----*/
+#coverBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    visibility: hidden;
+    transition: all .8s ease;
+}
+#msgBox, #alertBox {
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    max-width: 350px;
+    min-height: 80px;
+    max-height: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .3);
+    position: absolute;    
+    visibility: hidden;
+    transform: translateY(400%);
+    transition: all .8s ease;
+}
+#msgBox {
+    bottom: 0;
+}
+#alertBox span {
+  margin-top: 40px;
+  margin-bottom: 30px;
+}
+#coverBox.show-msg, #coverBox.show-alert {
+    background: rgba(255, 255, 255, .5);
+    visibility: visible;
+}
+#coverBox.show-alert #alertBox {
+    transform: translateY(0);
+    visibility: visible;
+}
+#coverBox.show-msg #msgBox {
+    transform: translateY(-50px);
+    animation: msgBoxColorAnim .5s linear forwards 2 .5s;
+    visibility: visible;
+}
+@keyframes msgBoxColorAnim {
+    0% {
+        background: #ffffff;
+    }
+    50% {
+        background: rgba(255, 174, 1, 0.3);
+    }
+    100% {
+        background: #ffffff;
+    }
+}
+#coverBox #closeBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(245, 33, 33, 0.644);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+#coverBox #closeBtn:hover {
+    background: rgba(245, 33, 33, 0.8);
+}
+#coverBox #closeBtn::after {
+    content: "";
+    background: #fff;
+    width: 60%;
+    height: 1px;
+    transform: rotate(-45deg);
+    position: absolute;
+}
+#coverBox #closeBtn::before {
+    content: "";
+    background: #fff;
+    width: 60%;
+    height: 1px;
+    transform: rotate(45deg);
+    position: absolute;
+}
+
+#coverBox #closeBtn.hid {
+    display: none;
+}
+/*----- Message, Alert 訊息框 End -----*/

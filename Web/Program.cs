@@ -40,6 +40,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // 註冊Respoitories
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 
 // 註冊Services
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
@@ -47,6 +48,7 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 // 添加記憶體快取
 builder.Services.AddMemoryCache();
 

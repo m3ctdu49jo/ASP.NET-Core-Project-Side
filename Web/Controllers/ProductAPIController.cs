@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingMall.Web.DTOs;
 using ShoppingMall.Web.Infrastructure.Services;
+using ShoppingMall.Web.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,10 +13,12 @@ namespace ShoppingMall.Web.Controllers
     public class ProductTESTController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IMapper _mapper;
 
-        public ProductTESTController(IProductService productService)
+        public ProductTESTController(IProductService productService, IMapper mapper)
         {
             _productService = productService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -72,7 +76,7 @@ namespace ShoppingMall.Web.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, ProductDTO productDto)
         {
-            var updatedProduct = await _productService.UpdateProductAsync(id, productDto);
+            var updatedProduct = await _productService.UpdateProductAsync(id, _mapper.Map<Product>(productDto));
             if (updatedProduct == null)
                 return NotFound();
 

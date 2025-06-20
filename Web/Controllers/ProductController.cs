@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingMall.Web.DTOs;
 using ShoppingMall.Web.Infrastructure.Services;
+using ShoppingMall.Web.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,12 +12,15 @@ namespace ShoppingMall.Web.Controllers
     {
         private readonly IProductService _productService;
         private readonly IOrderService _orderService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IMapper _mapper;
 
-        public ProductController(IProductService productService, IOrderService orderService)
+        public ProductController(IProductService productService, IOrderService orderService, IShoppingCartService shoppingCartService, IMapper mapper)
         {
             _productService = productService;
             _orderService = orderService;
-            
+            _shoppingCartService = shoppingCartService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -30,7 +35,7 @@ namespace ShoppingMall.Web.Controllers
             if (product == null)
                 return NotFound();
 
-            return View(product);
+            return View(_mapper.Map<ProductDTO>(product));
         }
 
         public async Task<IActionResult> Category(int categoryId)
@@ -95,7 +100,7 @@ namespace ShoppingMall.Web.Controllers
             if (!ModelState.IsValid)
                 return View(productDto);
 
-            var updatedProduct = await _productService.UpdateProductAsync(id, productDto);
+            var updatedProduct = await _productService.UpdateProductAsync(id, _mapper.Map<Product>(productDto));
             if (updatedProduct == null)
                 return NotFound();
 
@@ -121,5 +126,12 @@ namespace ShoppingMall.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public IActionResult AddToShoppingCar(string productId, int count)
+        {
+            return View();
+        }
+        
     }
 } 

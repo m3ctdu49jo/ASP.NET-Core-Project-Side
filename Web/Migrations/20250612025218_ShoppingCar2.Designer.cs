@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShoppingMall.Web.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using ShoppingMall.Web.Infrastructure.Data;
 namespace ShoppingMall.Web.Migrations
 {
     [DbContext(typeof(NorthwindContext))]
-    partial class NorthwindContextModelSnapshot : ModelSnapshot
+    [Migration("20250612025218_ShoppingCar2")]
+    partial class ShoppingCar2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,21 +253,26 @@ namespace ShoppingMall.Web.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("ShoppingMall.Web.Models.ShoppingCart", b =>
+            modelBuilder.Entity("ShoppingMall.Web.Models.ShoppingCar", b =>
                 {
-                    b.Property<int>("ProductID")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PurchCount")
                         .HasColumnType("int");
 
-                    b.HasKey("ProductID", "UserName");
+                    b.HasKey("Id", "UserName");
 
-                    b.ToTable("ShoppingCarts");
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ShoppingCars");
                 });
 
             modelBuilder.Entity("ShoppingMall.Web.Models.Supplier", b =>
@@ -438,11 +446,11 @@ namespace ShoppingMall.Web.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("ShoppingMall.Web.Models.ShoppingCart", b =>
+            modelBuilder.Entity("ShoppingMall.Web.Models.ShoppingCar", b =>
                 {
                     b.HasOne("ShoppingMall.Web.Models.Product", "Product")
-                        .WithMany("ShoppingCarts")
-                        .HasForeignKey("ProductID")
+                        .WithMany("ShoppingCars")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -468,7 +476,7 @@ namespace ShoppingMall.Web.Migrations
                 {
                     b.Navigation("OrderDetails");
 
-                    b.Navigation("ShoppingCarts");
+                    b.Navigation("ShoppingCars");
                 });
 #pragma warning restore 612, 618
         }

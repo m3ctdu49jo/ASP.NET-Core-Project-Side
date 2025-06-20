@@ -4,6 +4,22 @@
     ViewData["Title"] = ViewBag.Title ?? "商品列表";
 }
 
+@section Styles {
+    <style>
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .purch_num {
+            width: 60px;
+        }
+        .card-footer {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+    </style>
+}
+
 <div class="container">
     <div class="row mb-4">
         <div class="col">
@@ -34,7 +50,9 @@
                 <div class="card h-100">
                     @if (!string.IsNullOrEmpty(item.ImageUrl))
                     {
-                        <img src="/images/@item.ImageUrl" class="card-img-top" alt="@item.ProductName">
+                        <a asp-action="Details" asp-route-id="@item.ProductID">
+                            <img src="/images/@item.ImageUrl" class="card-img-top" alt="@item.ProductName">
+                        </a>
                     }
                     else
                     {
@@ -43,7 +61,7 @@
                         </div>
                     }
                     <div class="card-body">
-                        <h5 class="card-title">@item.ProductName</h5>
+                        <a asp-action="Details" asp-route-id="@item.ProductID" class="card-title text-decoration-none fs-5">@item.ProductName</a>
                         <p class="card-text text-muted">@item.CategoryName</p>
                         <p class="card-text">
                             @if (item.UnitPrice.HasValue)
@@ -53,11 +71,16 @@
                         </p>
                     </div>
                     <div class="card-footer bg-white border-top-0">
-                        <div class="d-flex justify-content-between">
-                            <a asp-action="Details" asp-route-id="@item.ProductID" class="btn btn-outline-primary">詳細資訊</a>
-                            <div>
-                                <a asp-action="Edit" asp-route-id="@item.ProductID" class="btn btn-outline-secondary">編輯</a>
-                                <a asp-action="Delete" asp-route-id="@item.ProductID" class="btn btn-outline-danger">刪除</a>
+                        <div>
+                            <div class="d-flex justify-content-between">
+                                @* <a asp-action="Edit" asp-route-id="@item.ProductID" class="btn btn-outline-secondary">編輯</a>
+                                <a asp-action="Delete" asp-route-id="@item.ProductID" class="btn btn-outline-danger">刪除</a> *@
+                                <div class="input-group d-flex">
+                                    <button class="btn btn-light plus_btn border border-1">+</button>
+                                    <input type="number" min="1" class="purch_num text-center fs-8 border-0 border-top-1" value="1" />
+                                    <button class="btn btn-light minus_btn border border-1">-</button>
+                                </div>
+                                <a asp-action="Edit" asp-route-id="@item.ProductID" class="btn btn-outline-secondary ms-1">購</a>
                             </div>
                         </div>
                     </div>
@@ -66,3 +89,10 @@
         }
     </div>
 </div> 
+
+@section Scripts {
+    <script>
+        inputNumBtnsClickEvent(".plus_btn", ".minus_btn");
+        detectNumScopeBlurEvent(".purch_num");
+    </script>
+}

@@ -11,6 +11,6 @@ namespace ShoppingMall.Web.ViewModels
         [DisplayName("確認密碼")]
         public string ConfirmPassword { get; set; } = string.Empty;
         
-        public List<SelectListItem> Cities { get; set; }
+        public List<SelectListItem>? Cities { get; set; }
     }
 }
