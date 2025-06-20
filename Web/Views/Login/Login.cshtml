@@ -7,11 +7,11 @@
 
 <form method="post" asp-action="Index" asp-asp-controller="Login">
     <div class="mb-1">
-        <label>@Html.DisplayNameFor(m => m.UserName)</label>
+        <label class="color-blue-3">@Html.DisplayNameFor(m => m.UserName)</label>
         <styled-input type="text" asp-for="UserName"></styled-input>
     </div>
     <div class="mb-3">
-        <label>@Html.DisplayNameFor(m => m.Password)</label>
+        <label class="color-blue-3 ml-1">@Html.DisplayNameFor(m => m.Password)</label>
         <styled-input type="password" asp-for="Password"></styled-input>
     </div>
     <input id="loginBtn" type="submit" class="btn btn-primary" value="登入" />
@@ -22,7 +22,7 @@
 <p>
     @if(ViewBag.ErrorMsg != null)
     {
-        <span style="color: red;">@ViewBag.ErrorMsg</span>
+        <span class="text-danger">@ViewBag.ErrorMsg</span>
     }
 </p>
 

@@ -145,26 +145,25 @@ namespace ShoppingMall.Web.Controllers
         }
 
         public IActionResult Register()
-        {
-            var selectItem = ReadCountryData().Select(x => new SelectListItem
-            {
-                Value = x.CityName,
-                Text = x.CityName
-            }).ToList();
-            
+        {            
             RegisterUserViewModel model = new RegisterUserViewModel
             {
-                Cities = selectItem
+                Cities = CitiesSelectItemList()
             };
-            model.Cities.Insert(0, new SelectListItem
+
+            return View(model);
+        }
+        private List<SelectListItem> CitiesSelectItemList()
+        {
+            var cities = ConfigUtil.GetTaiwanCitisSection(_config);
+            var selectListItems = cities.Select(city => new SelectListItem { Text = city.CityName, Value = city.CityName }).ToList();
+            selectListItems.Insert(0, new SelectListItem
             {
                 Value = string.Empty,
                 Text = "請選擇縣市"
             });
-            if(model.Cities.Any(x => x.Text == "釣魚臺"))
-                model.Cities.Remove(model.Cities.Find(x => x.Text == "釣魚臺"));
-
-            return View(model);
+            
+            return selectListItems;
         }
 
         [HttpPost]
@@ -172,6 +171,12 @@ namespace ShoppingMall.Web.Controllers
         public async Task<IActionResult> Register(RegisterUserViewModel RegisterVM)
         {
             bool success = false;
+            RegisterVM.Cities = CitiesSelectItemList();
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ErrorMsg = "請正確填寫欄位";
+                return View(RegisterVM);
+            }
             if (!RegisterInfoCheck(RegisterVM.UserInfo, RegisterVM.ConfirmPassword))
             {
                 return View(RegisterVM);
@@ -181,27 +186,26 @@ namespace ShoppingMall.Web.Controllers
             {
                 bool isExist = await _userService.IsExistUserNameAsync(RegisterVM.UserInfo.UserName);
                 if (isExist)
+                {
                     ViewBag.ErrorMsg = "帳號已存在，請重新輸入";
+                    return View(RegisterVM);
+                }
                 else
                     success = true;
 
-                if (ModelState.IsValid && success)
+                if (success)
                 {
                     RegisterVM.UserInfo.CreatDate = DateTime.Now;
-                    await _userService.AddUserAsync(_mapper.Map<User>(RegisterVM.UserInfo)).ContinueWith(task =>
-                    {
-                        if (task.IsFaulted)
-                        {
-                            ViewBag.ErrorMsg = string.Concat(RegisterVM.UserInfo.UserName, " ", "註冊失敗，請稍後再試");
-                            success = false;
-                            // throw new Exception(task.Exception?.Message);
-                        }
-                    });
+                    await _userService.AddUserAsync(_mapper.Map<User>(RegisterVM.UserInfo));
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+
+                ViewBag.ErrorMsg = string.Concat(RegisterVM.UserInfo.UserName, " ", "註冊失敗，請稍後再試");
+                success = false;                
+                return View(RegisterVM);
+                // throw new Exception(ex.Message);
             }
 
             if (success)
@@ -211,12 +215,6 @@ namespace ShoppingMall.Web.Controllers
             }
 
             return View(RegisterVM);
-        }
-        private List<TaiwanCity> ReadCountryData()
-        {
-            var taiwanCity = new List<TaiwanCity>();
-            _config.GetSection("Cities").Bind(taiwanCity);
-            return taiwanCity;
         }
         public IActionResult RegisterSuccess()
         {

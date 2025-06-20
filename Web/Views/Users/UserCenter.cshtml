@@ -4,14 +4,46 @@
     ViewData["Title"] = "會員資訊";
 }
 
+@section Styles {
+<style>
+    #user-info > div span:first-child {
+        text-align: right;
+        display: inline-block;
+        width: 100px;
+        margin-right: 1rem;
+    }
+</style>
+}
+
 @await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
-<div class="mb-3">
-    <div>@Html.DisplayNameFor(model => model.Name)：@Html.DisplayFor(model => Model.Name)</div>
-    <div>@Html.DisplayNameFor(model => model.Password)：********** <a class="btn-link" href="@Url.Action("ChangePassword")">更改密碼</a></div>
-    <div>@Html.DisplayNameFor(model => model.Email)：@Html.DisplayFor(model => Model.Email)</div>
-    <div>@Html.DisplayNameFor(model => model.Phone)：@Html.DisplayFor(model => Model.Phone)</div>
-    <div>@Html.DisplayNameFor(model => model.City)：@Html.DisplayFor(model => Model.City)</div>
-    <div>@Html.DisplayNameFor(model => model.Address)：@Html.DisplayFor(model => Model.Address)</div>
-    <div>@Html.DisplayNameFor(model => model.LastLoginDate)：@Html.DisplayFor(model => Model.LastLoginDate)</div>
+<div id="user-info" class="mb-3">
+    <div class="mb-2">
+        <span class="color-blue-3">@Html.DisplayNameFor(model => model.Name)</span>
+        <span>@Html.DisplayFor(model => Model.Name)</span>
+    </div>
+    <div class="mb-2">
+        <span class="color-blue-3">@Html.DisplayNameFor(model => model.Password)        
+        </span>********** <a class="btn-link" href="@Url.Action("ChangePassword")">更改密碼</a>
+    </div>
+    <div class="mb-2">
+        <span class="color-blue-3">@Html.DisplayNameFor(model => model.Email)</span>
+        <span>@Html.DisplayFor(model => Model.Email)</span>
+    </div>
+    <div class="mb-2">
+        <span class="color-blue-3">@Html.DisplayNameFor(model => model.Phone)</span>
+        <span>@Html.DisplayFor(model => Model.Phone)</span>
+    </div>
+    <div class="mb-2">
+        <span class="color-blue-3">@Html.DisplayNameFor(model => model.City)</span>
+        <span>@Html.DisplayFor(model => Model.City)</span>
+    </div>
+    <div class="mb-2">
+        <span class="color-blue-3">@Html.DisplayNameFor(model => model.Address)</span>
+        <span>@Html.DisplayFor(model => Model.Address)</span>
+    </div>
+    <div>
+        <span class="color-blue-3">@Html.DisplayNameFor(model => model.LastLoginDate)</span>
+        <span>@Html.DisplayFor(model => Model.LastLoginDate)</span>
+    </div>
 </div>
 <a class="btn btn-primary" href="@Url.Action("Edit")">修改資料</a>
