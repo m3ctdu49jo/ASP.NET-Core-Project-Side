@@ -1,0 +1,79 @@
+@model IEnumerable<ShoppingCartDTO>
+
+<div id="checkout-cart-items">
+    @if(Model.Any()){
+        var totalAmount = Model.Sum(item => item.Product.UnitPrice * item.PurchCount);
+        @foreach (var item in Model)
+        {
+            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom">
+                <div>
+                    <h5 class="mb-3">@item.Product.ProductName</h5>
+                    <p>
+                        數量: @item.PurchCount<br />
+                        單價: NT$ @item.Product.UnitPrice<br />
+                        小計: NT$ @(item.Product.UnitPrice * item.PurchCount)
+                    </p>
+                </div>
+                <div>
+                    <form asp-action="RemoveFromCart" method="post" class="d-inline">
+                        <input type="hidden" name="productId" value="@item.Product.ProductID" />
+                        <button type="button" class="btn btn-danger remove-cart-item">移除</button>
+                    </form>
+                </div>
+            </div>
+        }
+        <div class="text-end">總計： NT$ @totalAmount</div>
+    }
+    else 
+    {
+        <div class="alert alert-info">
+            <p>您的購物車是空的。</p>
+        </div>
+    }
+
+    <script>
+
+        document.querySelectorAll(".remove-cart-item").forEach(btn => {
+            btn.addEventListener("click", function(event) {
+                const form = this.closest("form");
+                const productId = form.querySelector("input[name='productId']").value;
+
+
+                fetch("/ShoppingCart/RemoveFromCart", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Fetch-Request': 'true'
+                    },
+                    body: new URLSearchParams({ productId })
+                })
+                .then(async res => {
+                    switch (res.status) {
+                        case 200:
+                            return await res.text();
+                        case 400:
+                            showAlert("無效的請求，請稍後再試。" + await res.text());
+                            return;
+                        case 401:
+                            showAlert("⚠️ 請登入會員或註冊會員帳號");
+                            return;
+                        default :
+                            showAlert("✖ 發生未知錯誤，請稍後再試");
+                            return;
+                    }
+                })
+                .then(html => {
+                    if (html) {
+                        document.querySelector("#checkout-cart-items").innerHTML = "<p>Loading...</p>";
+                        showMsg("✔ 商品已從購物車中移除");
+                        setTimeout(() => {
+                            document.querySelector("#checkout-cart-items").innerHTML = html;
+                        }, 1000);
+                    }
+                });
+            });
+        });
+        
+    </script>
+
+</div>

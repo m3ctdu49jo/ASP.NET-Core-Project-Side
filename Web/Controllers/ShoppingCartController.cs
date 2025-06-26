@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Filters;
 using ShoppingMall.Web.Infrastructure.Services;
 using ShoppingMall.Web.Models;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ShoppingMall.Web.Controllers
 {
+    [ServiceFilter(typeof(AuthenticatedFilter))]
     public class ShoppingCartController : Controller
     {
         private readonly IProductService _productService;
@@ -26,9 +28,6 @@ namespace ShoppingMall.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToShoppingCart([FromBody]ShoppingCartDTO req)
         {
-            if (User.Identity == null || !User.Identity.IsAuthenticated)
-                return Unauthorized();
-
             try
             {
                 var shoppingItem = await _shoppingCartService.GetByIdAndUserNameAsync(req.Product.ProductID, User.Identity.Name);
@@ -50,15 +49,25 @@ namespace ShoppingMall.Web.Controllers
 
         public async Task<IActionResult> Checkout()
         {
-            if (User.Identity == null || !User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-                
-            }
-
             var cartItems = await _shoppingCartService.GetAllIncludeProductByUserNameAsync(User.Identity.Name);
 
             return View(cartItems);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromCart(int productId)
+        {
+            try
+            {
+                await _shoppingCartService.DeleteAsync(productId, User.Identity.Name);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+                
+            var cartItems = await _shoppingCartService.GetAllIncludeProductByUserNameAsync(User.Identity.Name);
+            return PartialView("_CartItemsPartial", cartItems);
         }
         private async Task<(bool, string)> VaildProductStock(ShoppingCartDTO req, Product product, ShoppingCart shoppingItem)
         {
@@ -90,10 +99,6 @@ namespace ShoppingMall.Web.Controllers
                 };
                 await _shoppingCartService.Generic.AddAsync(shoppingItem);
             }
-        }
-        public IActionResult ImmediatePurch(string productId)
-        {
-            return View();
         }
     }
 } 

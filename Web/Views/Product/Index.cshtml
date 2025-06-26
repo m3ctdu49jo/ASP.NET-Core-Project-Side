@@ -25,9 +25,6 @@
         <div class="col">
             <h1>@ViewData["Title"]</h1>
         </div>
-        <div class="col-auto">
-            <a asp-action="Create" class="btn btn-primary">新增商品</a>
-        </div>
     </div>
 
     <div class="row mb-4">
@@ -70,20 +67,6 @@
                             }
                         </p>
                     </div>
-                    <div class="card-footer bg-white border-top-0">
-                        <div>
-                            <div class="d-flex justify-content-between">
-                                @* <a asp-action="Edit" asp-route-id="@item.ProductID" class="btn btn-outline-secondary">編輯</a>
-                                <a asp-action="Delete" asp-route-id="@item.ProductID" class="btn btn-outline-danger">刪除</a> *@
-                                <div class="input-group d-flex">
-                                    <button class="btn btn-light plus_btn border border-1">+</button>
-                                    <input type="number" min="1" class="purch_num text-center fs-8 border-0 border-top-1" value="1" />
-                                    <button class="btn btn-light minus_btn border border-1">-</button>
-                                </div>
-                                <a asp-action="Edit" asp-route-id="@item.ProductID" class="btn btn-outline-secondary ms-1">購</a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         }
@@ -92,7 +75,5 @@
 
 @section Scripts {
     <script>
-        inputNumBtnsClickEvent(".plus_btn", ".minus_btn");
-        detectNumScopeBlurEvent(".purch_num");
     </script>
 }

@@ -19,6 +19,20 @@ public class ShoppingCartService : IShoppingCartService
     }
     public IGenericService<ShoppingCart> Generic => _genericService;
 
+    public async Task<bool> DeleteAsync(int productId, string userName)
+    {
+        bool success = false;
+        var items = await _shoppingCartRepository.FindAsync(x => x.Product.ProductID == productId && x.UserName.Equals(userName));
+        var item = items.SingleOrDefault();
+        if (item != null)
+        {
+            await _shoppingCartRepository.RemoveAsync(item);
+            await _shoppingCartRepository.SaveChangesAsync();
+            success = true;
+        }
+        return success;
+    }
+
     public async Task<IEnumerable<ShoppingCartDTO>> GetAllByUserNameAsync(string userName)
     {
         var items = await _shoppingCartRepository.FindAsync(x => x.UserName.Equals(userName));

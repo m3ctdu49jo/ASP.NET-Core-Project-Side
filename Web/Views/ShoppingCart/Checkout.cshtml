@@ -4,16 +4,8 @@
     ViewData["Title"] = "購物車結帳";
 }
 @await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
+@TempData["ErrorMessage"]
 
-@if(Model.Any()){
+@await Html.PartialAsync("_CartItemsPartial", Model)
 
-    @foreach (var item in Model)
-    {
-        <div>
-            <h2>@item.Product.ProductName</h2>
-            <p>數量: @item.PurchCount</p>
-            <p>單價: NT$ @item.Product.UnitPrice</p>
-            <p>小計: NT$ @(item.Product.UnitPrice * item.PurchCount)</p>
-        </div>
-    }
-}
+@* <button id="checkoutBtn" class="btn btn-primary">結帳</button> *@

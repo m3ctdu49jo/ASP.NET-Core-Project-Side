@@ -7,9 +7,18 @@ public class AuthenticatedFilter : IActionFilter
     public void OnActionExecuting(ActionExecutingContext context)
     {
         var user = context.HttpContext.User;
-        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        if (user == null || !user.Identity.IsAuthenticated)
         {
-            context.Result = new RedirectToActionResult("Index", "Login", null);
+            var isAjax = context.HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+            var isFetch = context.HttpContext.Request.Headers["Fetch-Request"] == "true";
+            if (isAjax || isFetch)
+            {
+                context.Result = new UnauthorizedResult(); // 401
+            }
+            else
+            {
+                context.Result = new RedirectToActionResult("Index", "Login", null);
+            }
         }
     }
 

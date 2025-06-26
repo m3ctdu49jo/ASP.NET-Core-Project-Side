@@ -32,7 +32,7 @@
                 </div>
             }
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 mb-5">
             <h1>@Model.ProductName</h1>
             <p class="text-muted">@Model.CategoryName</p>
             
@@ -42,49 +42,14 @@
                     <h3 class="text-danger">NT$ @Model.UnitPrice.Value.ToString("N0")</h3>
                 }
             </div>
-
-    using AutoMapper;
-#line default
-            <h5>商品描述</h5>
+            <div class="mb-4">
+                <h5>商品描述</h5>
                 <p>@(Model.Description ?? "暫無描述")</p>
             </div>
-
-            <div class="mb-4">
-                <h5>商品資訊</h5>
-                <table class="table">
-                    <tr>
-                        <th width="150">供應商</th>
-                        <td>@Model.SupplierName</td>
-                    </tr>
-                    <tr>
-                        <th>庫存數量</th>
-                        <td>@(Model.UnitsInStock?.ToString() ?? "0")</td>
-                    </tr>
-                    <tr>
-                        <th>訂購數量</th>
-                        <td>@(Model.UnitsOnOrder?.ToString() ?? "0")</td>
-                    </tr>
-                    <tr>
-                        <th>重新訂購點</th>
-                        <td>@(Model.ReorderLevel?.ToString() ?? "0")</td>
-                    </tr>
-                    <tr>
-                        <th>單位</th>
-                        <td>@Model.QuantityPerUnit</td>
-                    </tr>
-                    <tr>
-                        <th>狀態</th>
-                        <td>@(Model.Discontinued ? "已停售" : "販售中")</td>
-                    </tr>
-                </table>
-            </div>
-
             <div class="d-flex justify-content-between">
                 <div class="input-group w-auto">                    
-                    <button type="button" class="btn btn-light plus_btn border border-1">+</button>
                     <input id="@(string.Concat("purchNum_", Model.ProductID))" name="Count" type="number" min="1" max="@Model.UnitsInStock" class="purch_num text-center fs-8 border-0 border-top border-bottom" value="1" />
-                    <input type="hidden" name="ProductId" value="@Model.ProductID" />
-                    <button type="button" class="btn btn-light minus_btn border border-1">-</button>
+                    
                 </div>
                 <div>
                     @if(@Model.UnitsInStock > 0)
@@ -93,7 +58,8 @@
                         <a asp-action="Delete" asp-route-id="@Model.ProductID" class="btn btn-danger">刪除商品</a> *@
                         <button type="submit" class="btn btn-danger immed-cart-btn" data-purch-id="@(string.Concat("purchNum_", Model.ProductID))">立即購買</button>
                         <button type="button" class="btn btn-primary add-cart-btn" data-purch-id="@(string.Concat("purchNum_", Model.ProductID))">加入購物車</button>
-                       
+                        <input type="hidden" name="ProductId" value="@Model.ProductID" />
+                        
                     }
                     else
                     {
@@ -101,6 +67,26 @@
                     }
                 </div>
             </div>
+
+        </div>
+            
+
+        <div class="mb-4">
+            <h5>商品資訊</h5>
+            <table class="table">
+                <tr>
+                    <th width="150">供應商</th>
+                    <td>@Model.SupplierName</td>
+                </tr>
+                <tr>
+                    <th>庫存數量</th>
+                    <td>@(Model.UnitsInStock?.ToString() ?? "0")</td>
+                </tr>
+                <tr>
+                    <th>單位</th>
+                    <td>@Model.QuantityPerUnit</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
@@ -108,11 +94,10 @@
 
 @section Scripts {
     <script>
-        inputNumBtnsClickEvent(".plus_btn", ".minus_btn");
+        inputNumBuildBtnsClickEvent(document.querySelector("#@(string.Concat("purchNum_", Model.ProductID))"));
         detectNumScopeBlurEvent(".purch_num");
         addProductToShoppingCar(".add-cart-btn");
         addProductToShoppingCar(".immed-cart-btn", true);
-        builderMsgBoxes();
 
         function addProductToShoppingCar(btnClassName, immediately = false) {
             document.querySelectorAll(btnClassName).forEach(btn => {
@@ -124,9 +109,7 @@
 
                     fetch(url, {
                         method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
+                        headers: fetchHeaders(),
                         body: JSON.stringify({
                             Product: {
                                 ProductID: p_id

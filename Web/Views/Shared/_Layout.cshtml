@@ -27,39 +27,31 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="Index">Customers</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">Order</a>
-                            </li>
                         </ul>
+                        <div class="d-sm-block border-bottom border-secondary opacity-50"></div>
+                        
+                        <div class="p-3 ps-0">
+                            @if(User.Identity == null || !User.Identity.IsAuthenticated)
+                            {
+                                <a class="text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
+                                <font> | </font>
+                                <a class="text-dark" asp-area="" asp-controller="Login" asp-action="Register">Register</a>
+                            }
+                            else
+                            {
+                                <font> Hi, </font>
+                                <a asp-action="UserCenter" asp-controller="Users" class="fw-bold" style="color:rgb(22, 104, 172)">@User.Identity.Name</a>
+                                <font> | </font>
+                                <a class="text-dark text-decoration-none" asp-area="" asp-controller="ShoppingCart" asp-action="Checkout">🛒購物車</a>
+                                <font> | </font>
+                                <a class="text-secondary text-decoration-none" asp-area="" asp-controller="Login" asp-action="Logout">登出</a>
+                            }
+                        </div>
                     </div>
                 </div>
             </nav>
-            <div class="position-absolute top-0 end-0 p-3">
-                @if(User.Identity == null || !User.Identity.IsAuthenticated)
-                {
-                    <a class="text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
-                    <font> | </font>
-                    <a class="text-dark" asp-area="" asp-controller="Login" asp-action="Register">Register</a>
-                }
-                else
-                {
-                    <font> Hi, </font>
-                    <a asp-action="UserCenter" asp-controller="Users" class="fw-bold" style="color:rgb(22, 104, 172)">@User.Identity.Name</a>
-                    <font> | </font>
-                    <a class="text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
-                }
-            </div>
         </div>
     </header>
     <div class="container">
@@ -78,5 +70,8 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/Util.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        builderMsgBoxes();
+    </script>
 </body>
 </html>
