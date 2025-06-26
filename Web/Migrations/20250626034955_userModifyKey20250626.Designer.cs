@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShoppingMall.Web.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using ShoppingMall.Web.Infrastructure.Data;
 namespace ShoppingMall.Web.Migrations
 {
     [DbContext(typeof(NorthwindContext))]
-    partial class NorthwindContextModelSnapshot : ModelSnapshot
+    [Migration("20250626034955_userModifyKey20250626")]
+    partial class userModifyKey20250626
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -362,6 +365,9 @@ namespace ShoppingMall.Web.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("LastLoginDate")
                         .HasColumnType("datetime");
 
@@ -384,11 +390,6 @@ namespace ShoppingMall.Web.Migrations
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime");
-
-                    b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("newsequentialid()");
 
                     b.HasKey("UserName");
 

@@ -5,7 +5,7 @@ namespace ShoppingMall.Web.DTOs;
 
 public class UserDTO
 {
-    public int Id { get; set; }
+    public Guid UserId { get; set; }
     [DisplayName("帳號")]
     public string UserName { get; set; } = string.Empty;
     [DisplayName("密碼")]

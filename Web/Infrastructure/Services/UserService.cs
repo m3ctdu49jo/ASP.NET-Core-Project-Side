@@ -44,9 +44,9 @@ public class UserService : IUserService
 
         return null;
     }
-    public async Task<User?> GetByIdAndUserNameAsync(int id, string username)
+    public async Task<User?> GetByIdAndUserNameAsync(Guid id, string username)
     {
-        var user = await _userRepository.FindAsync(x => x.Id == id && x.UserName == username.Trim());
+        var user = await _userRepository.FindAsync(x => x.UserId == id && x.UserName == username.Trim());
         if (!user.Any())
             return null;
 

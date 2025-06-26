@@ -81,7 +81,8 @@ namespace ShoppingMall.Web.Infrastructure.Data
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => new { e.Id, e.UserName });
+                entity.HasKey(e => e.UserName);
+                entity.Property(e => e.UserId).HasDefaultValueSql("newsequentialid()");
                 entity.Property(e => e.UserName).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(20);
                 entity.Property(e => e.Password).IsRequired().HasMaxLength(100);

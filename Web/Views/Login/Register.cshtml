@@ -37,12 +37,9 @@
         <styled-input type="tel" asp-for="UserInfo.Phone"></styled-input>
     </div>
     <div class="mb-2">
-        <label asp-for="UserInfo.Country"></label>
-        <select asp-for="UserInfo.Country" asp-items="@Model.Cities"></select>
-    </div>
-    <div class="mb-2">
         <label asp-for="UserInfo.City"></label>
-        <styled-input type="text" asp-for="UserInfo.City"></styled-input>
+        <select asp-for="UserInfo.City" asp-items="@Model.Cities"></select>
+    </div>
     <div class="mb-2">
         <label asp-for="UserInfo.Address"></label>
         <styled-input type="text" asp-for="UserInfo.Address"></styled-input>

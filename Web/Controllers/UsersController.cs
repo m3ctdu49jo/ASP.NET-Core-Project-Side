@@ -33,7 +33,7 @@ namespace ShoppingMall.Web.Controllers
         // GET: UsersController
         public async Task<ActionResult<UserDTO>> UserCenter()
         {
-            int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId);
+            Guid.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out Guid userId);
             var user = await _userService.GetByIdAndUserNameAsync(userId, User.Identity?.Name ?? string.Empty);
             if (user == null)
             {
@@ -45,7 +45,7 @@ namespace ShoppingMall.Web.Controllers
 
         public async Task<ActionResult<EditUserInfoViewModel>> Edit()
         {
-            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId))
+            if (!Guid.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out Guid userId))
                 return NotFound();
 
             var user = await _userService.GetByIdAndUserNameAsync(userId, User.Identity?.Name ?? "");
@@ -88,12 +88,12 @@ namespace ShoppingMall.Web.Controllers
                 return View(EditUserInfoVM);
             }
             var userInfo = EditUserInfoVM.UserInfo;
-            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId))
+            if (!Guid.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out Guid userId))
                 return NotFound();
             try
             {
                 var user = await _userService.GetByIdAndUserNameAsync(userId, userInfo.UserName ?? string.Empty);
-                if (user == null || user.Id != userId)
+                if (user == null || user.UserId != userId)
                     return NotFound();       
                 
                 if (user.UpdateDate.HasValue && DateTime.Compare(user.UpdateDate.GetValueOrDefault().AddSeconds(10), DateTime.Now) > 0)
