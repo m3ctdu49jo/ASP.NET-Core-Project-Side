@@ -48,22 +48,41 @@ function detectNumScopeBlurEvent(inputElem){
  * 生成加減數量按鈕與綁定點擊事件
  * @param {HTMLInputElement} inputElem 
  */
-function inputNumBuildBtnsClickEvent(inputElem) {    
+function inputNumBuildBtnsClickEvent(inputElem, btnClickCallback) {    
     let {plusBtn, minusBtn} = buildPlusMinusBtn(inputElem);
     
     plusBtn.addEventListener("click", (e) => {
         let n = Number(inputElem.value);
+        let isSafeCount = true;
         if(inputElem.max > n)
             inputElem.value = n + 1;
         else{
             inputElem.value = inputElem.max;
-            showMsg("已達商品最大購買上限");
+            isSafeCount = false;
+            showMsg("已達商品最大購買量");
         }
+        if(btnClickCallback && typeof btnClickCallback === "function" && isSafeCount)
+            btnClickCallback(inputElem.value);
     });
     minusBtn.addEventListener("click", (e) => {
+        let isSafeCount = true;
         if(inputElem.value > inputElem.min)
             inputElem.value = inputElem.value - 1;
+        else {
+            inputElem.value = inputElem.min;
+            isSafeCount = false;
+            showMsg("已達商品最小購買量");
+        }
+
+        if(btnClickCallback && typeof btnClickCallback === "function")
+            btnClickCallback(inputElem.value);
     });
+
+    inputElem.addEventListener("blur", (e) => {
+        if(btnClickCallback && typeof btnClickCallback === "function")
+            btnClickCallback(inputElem.value);
+    });
+        
 
     function buildPlusMinusBtn(inputElem){
         let plusBtn = document.createElement("div");
@@ -74,8 +93,8 @@ function inputNumBuildBtnsClickEvent(inputElem) {
         minusBtn.className = "btn btn-light plus_btn border border-1";
         minusBtn.classList.add("minus_btn");
         minusBtn.textContent = "-";
-        inputElem.insertAdjacentElement("beforebegin", plusBtn);
-        inputElem.insertAdjacentElement("afterend", minusBtn);
+        inputElem.insertAdjacentElement("beforebegin", minusBtn);
+        inputElem.insertAdjacentElement("afterend", plusBtn);
         return {plusBtn, minusBtn};
     }
 }

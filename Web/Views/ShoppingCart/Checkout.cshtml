@@ -9,3 +9,11 @@
 @await Html.PartialAsync("_CartItemsPartial", Model)
 
 @* <button id="checkoutBtn" class="btn btn-primary">結帳</button> *@
+
+@section Scripts {
+    <script src="~/js/cart.js"></script>
+
+    <script>
+        checkoutCartInit();     
+    </script>
+}

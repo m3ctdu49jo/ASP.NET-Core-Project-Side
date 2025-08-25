@@ -65,20 +65,53 @@ namespace ShoppingMall.Web.Controllers
             {
                 return BadRequest(e.Message);
             }
-                
+
             var cartItems = await _shoppingCartService.GetAllIncludeProductByUserNameAsync(User.Identity.Name);
             return PartialView("_CartItemsPartial", cartItems);
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> UpdateShoppingCart([FromBody]ShoppingCartDTO req)
+        {
+            try
+            {
+                var shoppingItem = await _shoppingCartService.GetByIdAndUserNameAsync(req.Product.ProductID, User.Identity.Name);
+                var product = await _productService.GetProductByIdAsync(req.Product.ProductID);
+
+                var diffNum = req.PurchCount - shoppingItem.PurchCount;
+                req.PurchCount = diffNum;
+                var (isValid, errorMessage) = await VaildProductStock(req, product, shoppingItem);
+                if (!isValid)
+                    return BadRequest(errorMessage);
+
+                await UpdateShoppingCart(shoppingItem, product, req.PurchCount);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            var cartItems = await _shoppingCartService.GetAllIncludeProductByUserNameAsync(User.Identity.Name);
+            return PartialView("_CartItemsPartial", cartItems);
+        }
+
         private async Task<(bool, string)> VaildProductStock(ShoppingCartDTO req, Product product, ShoppingCart shoppingItem)
         {
             string errorMessage = string.Empty;
+            var productStock = product?.UnitsInStock ?? 0;
+
             if (product == null)
                 errorMessage = "Not exist product";
-            var productStock = product?.UnitsInStock ?? 0;
-            if (req.PurchCount <= 0)
+            else if (productStock <= 0)
                 errorMessage = "商品目前缺貨";
-            if (req.PurchCount >= productStock || req.PurchCount + (shoppingItem != null ? shoppingItem.PurchCount : 0) > productStock)
+            else if (req.PurchCount + (shoppingItem != null ? shoppingItem.PurchCount : 0) <= 0)
+                errorMessage = "最小購買數量為1";
+            else if (req.PurchCount >= productStock || req.PurchCount + (shoppingItem != null ? shoppingItem.PurchCount : 0) > productStock)
                 errorMessage = "購買數量超過上限";
+            else if (req.PurchCount == 0 && shoppingItem.PurchCount == 1)
+                errorMessage = "已達到最小購買數量上限，請確認購買數量";
+            else if (req.PurchCount == 0 && shoppingItem.PurchCount == product.UnitsInStock)
+                errorMessage = "已達到最大購買數量上限，請確認購買數量";
             return (string.IsNullOrEmpty(errorMessage), errorMessage);
         }
         private async Task UpdateShoppingCart(ShoppingCart shoppingItem, Product product, int purchCount)

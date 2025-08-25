@@ -31,6 +31,17 @@ body {
   color: #455c8d;
 }
 
+/*----- 購物車相關 -----*/
+input.purch_num[type=number]::-webkit-outer-spin-button,
+input.purch_num[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.purch_num {
+    width: 60px;
+}
+/*----- 購物車相關 End -----*/
+
 /*----- Message, Alert 訊息框 -----*/
 #coverBox {
     display: flex;
