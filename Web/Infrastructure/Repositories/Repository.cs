@@ -19,14 +19,9 @@ namespace ShoppingMall.Web.Infrastructure.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(params object[] keyValues)
         {
-            return await _dbSet.FindAsync(id);
-        }
-        
-        public async Task<T?> GetByIdAsync(string id)
-        {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.FindAsync(keyValues);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
@@ -55,17 +50,9 @@ namespace ShoppingMall.Web.Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(params object[] keyValues)
         {
-            var entity = await GetByIdAsync(id);
-            if (entity != null)
-            {
-                _dbSet.Remove(entity);
-            }
-        }
-        public async Task DeleteAsync(string id)
-        {
-            var entity = await GetByIdAsync(id);
+            var entity = await GetByIdAsync(keyValues);
             if (entity != null)
             {
                 _dbSet.Remove(entity);

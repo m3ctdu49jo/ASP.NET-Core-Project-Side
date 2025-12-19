@@ -21,9 +21,9 @@ public class GenericService<TModel> : IGenericService<TModel> where TModel : cla
         await _repository.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(params object[] keyValues)
     {
-        await _repository.DeleteAsync(id);
+        await _repository.DeleteAsync(keyValues);
         await _repository.SaveChangesAsync();
     }
 
@@ -32,9 +32,9 @@ public class GenericService<TModel> : IGenericService<TModel> where TModel : cla
         return await _repository.GetAllAsync();
     }
 
-    public async Task<TModel> GetByIdAsync(int id)
+    public async Task<TModel> GetByIdAsync(params object[] keyValues)
     {
-        return await _repository.GetByIdAsync(id);
+        return await _repository.GetByIdAsync(keyValues);
     }
 
     public async Task UpdateAsync(TModel entity)
