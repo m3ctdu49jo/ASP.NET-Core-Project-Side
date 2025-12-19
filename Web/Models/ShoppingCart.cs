@@ -13,4 +13,5 @@ public class ShoppingCart
     [ForeignKey("ProductID")]
     public virtual Product Product { get; set; }
     public int PurchCount { get; set; }
+    public virtual User User { get; set; }
 }

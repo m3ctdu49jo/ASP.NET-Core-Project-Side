@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using ShoppingMall.Web.DTOs;
 using ShoppingMall.Web.Filters;
 using ShoppingMall.Web.Infrastructure.Services;
+using ShoppingMall.Web.Migrations;
 using ShoppingMall.Web.Models;
-using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ShoppingMall.Web.Controllers
@@ -15,13 +16,15 @@ namespace ShoppingMall.Web.Controllers
         private readonly IProductService _productService;
         private readonly IOrderService _orderService;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IProductCollectionService _productCollectionService;
         private readonly IMapper _mapper;
 
-        public ShoppingCartController(IProductService productService, IOrderService orderService, IShoppingCartService shoppingCartService, IMapper mapper)
+        public ShoppingCartController(IProductService productService, IOrderService orderService, IShoppingCartService shoppingCartService, IProductCollectionService productCollectionService, IMapper mapper)
         {
             _productService = productService;
             _orderService = orderService;
             _shoppingCartService = shoppingCartService;
+            _productCollectionService = productCollectionService;
             _mapper = mapper;
         }
 

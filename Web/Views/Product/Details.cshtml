@@ -1,17 +1,18 @@
 @using AutoMapper
-@model ProductDTO
+@model ProductViewModel
 @inject IMapper _Mapper
 
 @{
-    ViewData["Title"] = Model.ProductName;
+    var product = Model.Product;
+    ViewData["Title"] = product.ProductName;
 }
 
 <div class="container">
     <div class="row">
         <div class="col-md-6 mb-4">
-            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            @if (!string.IsNullOrEmpty(product.ImageUrl))
             {
-                <img src="/images/@Model.ImageUrl" class="img-fluid rounded" alt="@Model.ProductName">
+                <img src="/images/@product.ImageUrl" class="img-fluid rounded" alt="@product.ProductName">
             }
             else
             {
@@ -21,32 +22,32 @@
             }
         </div>
         <div class="col-md-6 mb-5">
-            <h1>@Model.ProductName</h1>
-            <p class="text-muted">@Model.CategoryName</p>
+            <h1>@product.ProductName</h1>
+            <p class="text-muted">@product.CategoryName</p>
             
             <div class="mb-4">
-                @if (Model.UnitPrice.HasValue)
+                @if (product.UnitPrice.HasValue)
                 {
-                    <h3 class="text-danger">NT$ @Model.UnitPrice.Value.ToString("N0")</h3>
+                    <h3 class="text-danger">NT$ @product.UnitPrice.Value.ToString("N0")</h3>
                 }
             </div>
             <div class="mb-4">
                 <h5>商品描述</h5>
-                <p>@(Model.Description ?? "暫無描述")</p>
+                <p>@(product.Description ?? "暫無描述")</p>
             </div>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mb-4">
                 <div class="input-group w-auto">                    
-                    <input id="@(string.Concat("purchNum_", Model.ProductID))" name="Count" type="number" min="1" max="@Model.UnitsInStock" class="purch_num text-center fs-8 border-0 border-top border-bottom" value="1" />
+                    <input id="@(string.Concat("purchNum_", product.ProductID))" name="Count" type="number" min="1" max="@product.UnitsInStock" class="purch_num text-center fs-8 border-0 border-top border-bottom" value="1" />
                     
                 </div>
                 <div>
-                    @if(@Model.UnitsInStock > 0)
+                    @if(@product.UnitsInStock > 0)
                     {
                         @* <a asp-action="Edit" asp-route-id="@Model.ProductID" class="btn btn-primary">編輯商品</a>
-                        <a asp-action="Delete" asp-route-id="@Model.ProductID" class="btn btn-danger">刪除商品</a> *@
-                        <button type="submit" class="btn btn-danger immed-cart-btn" data-purch-id="@(string.Concat("purchNum_", Model.ProductID))">立即購買</button>
-                        <button type="button" class="btn btn-primary add-cart-btn" data-purch-id="@(string.Concat("purchNum_", Model.ProductID))">加入購物車</button>
-                        <input type="hidden" name="ProductId" value="@Model.ProductID" />
+                        <a asp-action="Delete" asp-route-id="@product.ProductID" class="btn btn-danger">刪除商品</a> *@
+                        <button type="submit" class="btn btn-danger immed-cart-btn" data-purch-id="@(string.Concat("purchNum_", product.ProductID))">立即購買</button>
+                        <button type="button" class="btn btn-primary add-cart-btn" data-purch-id="@(string.Concat("purchNum_", product.ProductID))">加入購物車</button>
+                        <input type="hidden" name="ProductId" value="@product.ProductID" />
                         
                     }
                     else
@@ -54,6 +55,16 @@
                         <button type="button" class="btn btn-secondary">商品目前缺貨</button>
                     }
                 </div>
+            </div>
+            <div>
+                @if(!Model.IsInCollection)
+                {
+                    <button class="btn btn-secondary collection-btn" data-collected="false"><i>♡</i> 加入收藏</button>
+                }
+                else
+                {
+                    <button class="btn btn-warning collection-btn" data-collected="true"><i class="text-danger">♥︎</i> 已收藏</button>
+                }
             </div>
 
         </div>
@@ -64,15 +75,15 @@
             <table class="table">
                 <tr>
                     <th width="150">供應商</th>
-                    <td>@Model.SupplierName</td>
+                    <td>@product.SupplierName</td>
                 </tr>
                 <tr>
                     <th>庫存數量</th>
-                    <td>@(Model.UnitsInStock?.ToString() ?? "0")</td>
+                    <td>@(product.UnitsInStock?.ToString() ?? "0")</td>
                 </tr>
                 <tr>
                     <th>單位</th>
-                    <td>@Model.QuantityPerUnit</td>
+                    <td>@product.QuantityPerUnit</td>
                 </tr>
             </table>
         </div>
@@ -82,11 +93,12 @@
 
 @section Scripts {
     <script>
-        inputNumBuildBtnsClickEvent(document.querySelector("#@(string.Concat("purchNum_", Model.ProductID))"));
+        inputNumBuildBtnsClickEvent(document.querySelector("#@(string.Concat("purchNum_", product.ProductID))"));
         detectNumScopeBlurEvent(".purch_num");
         addProductToShoppingCar(".add-cart-btn");
         addProductToShoppingCar(".immed-cart-btn", true);
 
+        // 加入購物車功能
         function addProductToShoppingCar(btnClassName, immediately = false) {
             document.querySelectorAll(btnClassName).forEach(btn => {
                 btn.addEventListener("click", function() {
@@ -105,26 +117,15 @@
                             PurchCount: inputElem.value
                         })
                     })
-                    .then(async res => {    
-                        switch (res.status){
-                            case 200 :                                 
-                                if (immediately) {
-                                    window.location.href = "@Url.Action("Checkout", "ShoppingCart")";
-                                }
-                                else {
-                                    showMsg("✔ 商品已放入購物車");
-                                }
-                                return;
-                            case 400 :
-                                showAlert("✖ " + await res.text());
-                                return;
-                            case 401 :
-                                showAlert("⚠️ 請登入會員或註冊會員帳號");
-                                return;
-                            default :
-                                showAlert("✖ 發生未知錯誤，請稍後再試");
-                                return;
-                        }
+                    .then(async res => {   
+                        fetchStatusCheck(res, async () => {
+                            if (immediately) {
+                                window.location.href = "@Url.Action("Checkout", "ShoppingCart")";
+                            }
+                            else {
+                                showMsg("✔ 商品已放入購物車");
+                            }
+                        });
                     })
                     .catch(err => {
                         console.error("Error:", err);
@@ -132,6 +133,65 @@
                     });
                 });
             });
+        }
+    </script>
+    <script>
+        // 加入收藏功能
+        document.querySelector(".collection-btn").addEventListener("click", function(){
+            let collectBtn = this;
+            let url = "@Url.Action("Collections", "Product")";
+            let isCollected = collectBtn.dataset["collected"] === "true";
+            fetch(url, {
+                method: !isCollected ? "POST" : "DELETE",
+                body: JSON.stringify({
+                    productId: @product.ProductID
+                }),
+                headers: fetchHeaders()
+            })
+            .then(res => {
+                fetchStatusCheck(res, async () => {
+                    if(!isCollected){
+                        showMsg("♥︎ 商品已加入收藏");
+                        collectBtn.textContent = "已收藏";
+                        let i = document.createElement("i");
+                        i.textContent = "♥︎ ";
+                        i.classList.add("text-danger");
+                        collectBtn.prepend(i);
+                        collectBtn.dataset["collected"] = true;
+                        collectBtn.classList.remove("btn-secondary");
+                        collectBtn.classList.add("btn-warning");
+                    }
+                    else{
+                        showMsg("♡ 商品已取消收藏");
+                        collectBtn.textContent = "加入收藏";
+                        collectBtn.prepend("♡ ");
+                        collectBtn.dataset["collected"] = false;
+                        collectBtn.classList.add("btn-secondary");
+                        collectBtn.classList.remove("btn-warning");
+                    }
+                });
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                showAlert("✖ 發生錯誤，請稍後再試");
+            });
+        });
+
+        async function fetchStatusCheck(response, successCallback){
+            switch(response.status){
+                case 200 :
+                    successCallback();
+                    return;
+                case 400 :
+                    showAlert("✖ " + await response.text());
+                    return;
+                case 401 :
+                    showAlert("⚠️ 請登入會員或註冊會員帳號");
+                    return;
+                default :
+                    showAlert("✖ 發生未知錯誤，請稍後再試");
+                    return;
+            }
         }
     </script>
 }

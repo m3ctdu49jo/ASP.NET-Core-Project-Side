@@ -18,6 +18,7 @@ namespace ShoppingMall.Web.Infrastructure.Data
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<ProductCollection> ProductCollections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,6 +53,14 @@ namespace ShoppingMall.Web.Infrastructure.Data
                 entity.Property(e => e.ProductName).IsRequired().HasMaxLength(40);
                 entity.Property(e => e.QuantityPerUnit).HasMaxLength(20);
                 entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,2)");
+                entity.HasMany(e => e.ProductCollections)
+                    .WithOne(pc => pc.Product)
+                    .HasForeignKey(pc => pc.ProductID)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany(e => e.ShoppingCarts)
+                    .WithOne(sc => sc.Product);
+                entity.HasMany(e => e.OrderDetails)
+                    .WithOne(od => od.Product);
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
@@ -94,6 +103,11 @@ namespace ShoppingMall.Web.Infrastructure.Data
                 entity.Property(e => e.CreatDate).HasColumnType("datetime");
                 entity.Property(e => e.UpdateDate).HasColumnType("datetime");
                 entity.Property(e => e.LastLoginDate).HasColumnType("datetime");
+                // 一個使用者可以擁有多個購物車紀錄，而每一筆購物車紀錄都只屬於一個特定的使用者
+                entity.HasMany(e => e.ShoppingCarts)
+                    .WithOne(s => s.User);
+                entity.HasMany(e => e.ProductCollections)
+                    .WithOne(pc => pc.User);
 
             });
             modelBuilder.Entity<ShoppingCart>(entity =>
@@ -102,6 +116,20 @@ namespace ShoppingMall.Web.Infrastructure.Data
                 entity.Property(e => e.UserName).IsRequired().HasMaxLength(100);
                 entity.HasOne(e => e.Product)
                     .WithMany(s => s.ShoppingCarts);
+                entity.HasOne(e => e.User)
+                    .WithMany(s => s.ShoppingCarts);
+            });
+            modelBuilder.Entity<ProductCollection>(entity =>
+            {
+                entity.HasKey(e => new { e.ProductID, e.UserName });
+                entity.HasOne(e => e.Product)
+                    .WithMany(pc => pc.ProductCollections)
+                    .HasForeignKey(e => e.ProductID);
+
+                entity.HasOne(e => e.User)
+                    .WithMany(pc => pc.ProductCollections)
+                    .HasForeignKey(e => e.UserName)
+                    .OnDelete(DeleteBehavior.Cascade);  // 產品刪除時，連動刪除收藏紀錄
             });
         }
     }

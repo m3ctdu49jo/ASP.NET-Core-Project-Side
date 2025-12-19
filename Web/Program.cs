@@ -12,8 +12,32 @@ using ShoppingMall.Web;
 using ShoppingMall.Web.DTOs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using ShoppingMall.Web.Filters;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddPolicy("fixed-per-ip", httpContext =>
+    {
+        string factoryKey = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: factoryKey,
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                // 針對 "每一個 IP" 獨立計算
+                PermitLimit = 10,   // 每個視窗最多允許 10 個請求
+                Window = TimeSpan.FromSeconds(10),  // 視窗時間為 10 秒
+                QueueLimit = 2, // 超過限制時，最多排隊 2 個請求
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            }
+        );
+    });
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews()
@@ -49,6 +73,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+builder.Services.AddScoped<IProductCollectionService, ProductCollectionService>();
 // 添加記憶體快取
 builder.Services.AddMemoryCache();
 
@@ -67,6 +92,16 @@ builder.Services.AddScoped<AuthenticatedFilter>();
 builder.Configuration.AddJsonFile(Path.Combine("DataFile/", "TaiwanCity.json"), optional: true, reloadOnChange: true);
 
 var app = builder.Build();
+// 程式部署在 IIS、Nginx、Azure App Service 或 K8s Ingress
+// 通常會拿到 代理伺服器 (Proxy) 的 IP（例如 127.0.0.1 或 Load Balancer 的內部 IP）
+// 導致所有使用者的 Partition Key 都一樣，結果所有人共用 10 次額度，馬上就會被鎖死
+// 可以設定應用程式信任 Proxy 傳來的標頭
+// app.UseForwardedHeaders(new ForwardedHeadersOptions
+// {
+//     ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | 
+//                        Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+// });
+app.UseRateLimiter();
 
 // 初始化資料庫
 using (var scope = app.Services.CreateScope())

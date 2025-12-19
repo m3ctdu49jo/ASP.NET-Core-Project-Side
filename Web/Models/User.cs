@@ -15,4 +15,6 @@ public class User
     public DateTime? UpdateDate { get; set; } = DateTime.Now;
     public DateTime? LastLoginDate { get; set; }
     public DateTime? NewLoginDate { get; set; }
+    public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; }
+    public virtual ICollection<ProductCollection> ProductCollections { get; set; }
 }

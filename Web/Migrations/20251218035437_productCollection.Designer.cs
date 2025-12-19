@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShoppingMall.Web.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using ShoppingMall.Web.Infrastructure.Data;
 namespace ShoppingMall.Web.Migrations
 {
     [DbContext(typeof(NorthwindContext))]
-    partial class NorthwindContextModelSnapshot : ModelSnapshot
+    [Migration("20251218035437_productCollection")]
+    partial class productCollection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,8 +267,6 @@ namespace ShoppingMall.Web.Migrations
 
                     b.HasKey("ProductID", "UserName");
 
-                    b.HasIndex("UserName");
-
                     b.ToTable("ShoppingCarts");
                 });
 
@@ -397,21 +398,6 @@ namespace ShoppingMall.Web.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ShoppingMall.Web.ProductCollection", b =>
-                {
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("ProductID", "UserName");
-
-                    b.HasIndex("UserName");
-
-                    b.ToTable("ProductCollections");
-                });
-
             modelBuilder.Entity("ShoppingMall.Web.Models.Order", b =>
                 {
                     b.HasOne("ShoppingMall.Web.Models.Customer", "Customer")
@@ -465,34 +451,7 @@ namespace ShoppingMall.Web.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShoppingMall.Web.Models.User", "User")
-                        .WithMany("ShoppingCarts")
-                        .HasForeignKey("UserName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Product");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ShoppingMall.Web.ProductCollection", b =>
-                {
-                    b.HasOne("ShoppingMall.Web.Models.Product", "Product")
-                        .WithMany("ProductCollections")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShoppingMall.Web.Models.User", "User")
-                        .WithMany("ProductCollections")
-                        .HasForeignKey("UserName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ShoppingMall.Web.Models.Category", b =>
@@ -513,15 +472,6 @@ namespace ShoppingMall.Web.Migrations
             modelBuilder.Entity("ShoppingMall.Web.Models.Product", b =>
                 {
                     b.Navigation("OrderDetails");
-
-                    b.Navigation("ProductCollections");
-
-                    b.Navigation("ShoppingCarts");
-                });
-
-            modelBuilder.Entity("ShoppingMall.Web.Models.User", b =>
-                {
-                    b.Navigation("ProductCollections");
 
                     b.Navigation("ShoppingCarts");
                 });
