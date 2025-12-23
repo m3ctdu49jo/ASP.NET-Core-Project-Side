@@ -19,6 +19,7 @@ namespace ShoppingMall.Web.Mappings
                 .ForMember(dest => dest.Password, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Password)))
                 .ForMember(dest => dest.LastLoginDate, opt => opt.Condition(src => !(src.LastLoginDate == null)))
                 .ForMember(dest => dest.UserId, opt => opt.Condition(src => src.UserId != Guid.Empty));
+            CreateMap<ProductCollection, ProductCollectionDTO>().ReverseMap();
         }
     }
 } 

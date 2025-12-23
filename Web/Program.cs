@@ -65,6 +65,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // 註冊Respoitories
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+builder.Services.AddScoped<IProductCollectionRepository, ProductCollectionRepository>();
 
 // 註冊Services
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));

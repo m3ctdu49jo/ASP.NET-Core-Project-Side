@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using ShoppingMall.Web.Models;
 
-namespace ShoppingMall.Web;
+namespace ShoppingMall.Web.Models;
 
 public class ProductCollection
 {

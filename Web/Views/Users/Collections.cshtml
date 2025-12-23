@@ -1,0 +1,87 @@
+@model IEnumerable<ProductCollectionDTO>
+@{
+    ViewData["Title"] = "我的收藏";
+}
+
+@section Styles {
+    <style>
+        .cancel-collect-btn {
+            color: #999;
+            background-color: #f2f2f2;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            align-items: center;
+        }
+        .cancel-collect-btn:hover {
+            color: #fff;
+            padding-left: 30px;
+            background: #ce4a4a;
+        }
+        .cancel-collect-btn .icon {
+            color: #ffffff;
+            position: absolute;
+            left: 10px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .cancel-collect-btn:hover .icon {
+            opacity: 1;
+        }
+    </style>
+}
+
+@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
+
+<div id="container">
+    @if(Model == null || !Model.Any())
+    {
+        <p class="text-secondary">- 尚無任何收藏商品</p>
+    }else
+    {
+        @await Html.PartialAsync("_CollectionsPartial", Model)
+    }
+</div>
+    
+
+@section Scripts {
+    <script>
+        window.onload = function() {
+            let cancel_btns = document.querySelectorAll('.cancel-collect-btn');
+            cancel_btns.forEach(btn => {
+                let iconTxt = document.createElement('span');
+                iconTxt.classList.add('icon');
+                iconTxt.textContent = "⨉";
+                btn.appendChild(iconTxt);
+                btn.addEventListener('click', function() {
+                    if(!confirm('確定要取消收藏此商品嗎?'))
+                        return;
+                        
+                    let url = `@Url.Action("Collections", "Users")/${this.dataset.productId}`;
+                    fetch(url, {
+                        method: 'DELETE',
+                        headers: fetchHeaders()
+                    })
+                    .then(async response => {
+                        await fetchStatusCheck(response, () => {
+                            this.closest('li').remove();
+                        });
+                        return await response.text();
+                    })
+                    .then(txt => {
+                        let container = document.querySelector("#container");
+                        if (container.querySelectorAll('li').length > 0) return;
+                        let noneItem = document.createRange().createContextualFragment(`<p class="text-secondary">- 尚無任何收藏商品</p>`);
+                        container.appendChild(noneItem);
+                    })
+                    .catch(err => {
+                        console.error("Error:", err);
+                        showAlert("✖ 發生錯誤，請稍後再試");
+                    });
+                });
+            });
+        }
+    </script>
+}

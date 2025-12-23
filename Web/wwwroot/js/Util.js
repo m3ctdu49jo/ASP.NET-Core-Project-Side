@@ -178,3 +178,27 @@ function fetchHeaders(additionalHeaders){
     
     return header;
 }
+
+
+/**
+ * 根據狀態碼反饋訊息給使用者
+ * @param {Response} response - 狀態回應數據
+ * @param {Function} successCallback - 200 狀態碼，執行動作
+ * @returns 
+ */
+async function fetchStatusCheck(response, successCallback){
+    switch(response.status){
+        case 200 :
+            successCallback();
+            return;
+        case 400 :
+            showAlert("✖ " + await response.text());
+            return;
+        case 401 :
+            showAlert("⚠️ 請登入會員或註冊會員帳號");
+            return;
+        default :
+            showAlert("✖ 發生未知錯誤，請稍後再試");
+            return;
+    }
+}

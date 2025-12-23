@@ -22,12 +22,14 @@ namespace ShoppingMall.Web.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
+        private readonly IProductCollectionService _productCollectionService;
 
-        public UsersController(IUserService userService, IMapper mapper, IConfiguration config)
+        public UsersController(IUserService userService, IMapper mapper, IConfiguration config, IProductCollectionService productCollectionService)
         {
             _mapper = mapper;
             _userService = userService;
             _config = config;
+            _productCollectionService = productCollectionService;
         }
 
         // GET: UsersController
@@ -174,6 +176,34 @@ namespace ShoppingMall.Web.Controllers
 
             return View(model);
 
+        }
+
+        public async Task<IActionResult> Collections()
+        {
+            var collections = await _productCollectionService.GetListByUserName(User.Identity?.Name);
+            var collectionDTOs = _mapper.Map<IEnumerable<ProductCollectionDTO>>(collections);
+            return View(collectionDTOs);
+        }
+
+        [HttpDelete]
+        [ActionName("Collections")]
+        public async Task<IActionResult> CancelCollection(int id)
+        {
+            try
+            {
+                var targetItem = await _productCollectionService.Generic.GetByIdAsync(id, User.Identity?.Name ?? string.Empty);
+                if (targetItem == null)
+                    return BadRequest("取消失敗，此商品不在收藏清單中");
+                await _productCollectionService.Generic.DeleteAsync(id, User.Identity?.Name ?? string.Empty);
+                // var collections = await _productCollectionService.GetListByUserName(User.Identity?.Name);
+                // var collectionDTOs = _mapper.Map<IEnumerable<ProductCollectionDTO>>(collections);
+                // return PartialView("_CollectionsPartial", collectionDTOs);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+                return Ok();
         }
     }
 }

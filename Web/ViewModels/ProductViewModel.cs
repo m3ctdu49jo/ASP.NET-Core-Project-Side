@@ -1,6 +1,6 @@
 ﻿using ShoppingMall.Web.DTOs;
 
-namespace ShoppingMall.Web;
+namespace ShoppingMall.Web.ViewModels;
 
 public class ProductViewModel
 {

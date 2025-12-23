@@ -2,8 +2,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Filters;
 using ShoppingMall.Web.Infrastructure.Services;
 using ShoppingMall.Web.Models;
+using ShoppingMall.Web.ViewModels;
 using System.Threading.Tasks;
 
 namespace ShoppingMall.Web.Controllers
@@ -145,6 +147,7 @@ namespace ShoppingMall.Web.Controllers
         [HttpPost]
         [ActionName("Collections")]
         [EnableRateLimiting("fixed-per-ip")]
+        [ServiceFilter(typeof(AuthenticatedFilter))]
         public async Task<IActionResult> AddCollections([FromBody]ProductCollection collection)
         {
             try
@@ -169,6 +172,7 @@ namespace ShoppingMall.Web.Controllers
         [HttpDelete]
         [ActionName("Collections")]
         [EnableRateLimiting("fixed-per-ip")]
+        [ServiceFilter(typeof(AuthenticatedFilter))]
         public async Task<IActionResult> RemoveCollections([FromBody]ProductCollection collection)
         {
             try
