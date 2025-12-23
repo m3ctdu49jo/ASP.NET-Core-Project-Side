@@ -5,7 +5,7 @@
 }
 
 <div class="container">
-    <h1>@ViewData["Title"]</h1>
+    @await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
 
     <div class="alert alert-danger">
         <h4>確定要刪除此商品嗎？</h4>

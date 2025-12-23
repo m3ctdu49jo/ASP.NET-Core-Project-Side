@@ -1,7 +1,7 @@
 ﻿using ShoppingMall.Web.Infrastructure.Repositories;
 using ShoppingMall.Web.Models;
 
-namespace ShoppingMall.Web;
+namespace ShoppingMall.Web.Infrastructure.Repositories;
 
 public interface IShoppingCartRepository : IRepository<ShoppingCart>
 {

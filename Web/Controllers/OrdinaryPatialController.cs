@@ -6,7 +6,7 @@ namespace ShoppingMall.Web.Controllers
     {
         public ActionResult Index()
         {
-            return PartialView("_TitlePartial");
+            return View();
         }
 
     }
