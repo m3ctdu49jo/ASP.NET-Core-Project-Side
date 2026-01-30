@@ -17,5 +17,7 @@
 控制器：ShoppingCartController, ProductController
 - [x] 加入購物車
 - [x] 立即購買
-- [x] 購物車檢視(製作中)
+- [x] 購物車檢視
+- [x] 商品收藏
+- [x] 收藏商品檢視
 - [ ] 寄送地址(尚未製作)
