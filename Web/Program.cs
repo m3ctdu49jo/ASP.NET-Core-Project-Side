@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using ShoppingMall.Web.Filters;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
+using ShoppingMall.Web.Infrastructure.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +94,10 @@ builder.Services.AddScoped<AuthenticatedFilter>();
 builder.Configuration.AddJsonFile(Path.Combine("DataFile/", "TaiwanCity.json"), optional: true, reloadOnChange: true);
 
 var app = builder.Build();
+
+// Exception Middleware ，.NET 8 前做法
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 // 程式部署在 IIS、Nginx、Azure App Service 或 K8s Ingress
 // 通常會拿到 代理伺服器 (Proxy) 的 IP（例如 127.0.0.1 或 Load Balancer 的內部 IP）
 // 導致所有使用者的 Partition Key 都一樣，結果所有人共用 10 次額度，馬上就會被鎖死

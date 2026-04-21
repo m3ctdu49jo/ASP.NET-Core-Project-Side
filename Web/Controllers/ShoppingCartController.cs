@@ -117,6 +117,7 @@ namespace ShoppingMall.Web.Controllers
                 errorMessage = "已達到最大購買數量上限，請確認購買數量";
             return (string.IsNullOrEmpty(errorMessage), errorMessage);
         }
+        
         private async Task UpdateShoppingCart(ShoppingCart shoppingItem, Product product, int purchCount)
         {
             if (shoppingItem != null)
