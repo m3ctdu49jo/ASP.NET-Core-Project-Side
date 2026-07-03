@@ -43,8 +43,10 @@
                 <div class="card h-100">
                     @if (!string.IsNullOrEmpty(item.ImageUrl))
                     {
+                        string imageUrl = Url.Content(string.Format("~/{0}", item.ImageUrl));
                         <a asp-action="Details" asp-route-id="@item.ProductID">
-                            <img src="/images/@item.ImageUrl" class="card-img-top" alt="@item.ProductName">
+                            <img src="@imageUrl" class="card-img-top" alt="@item.ProductName">
+
                         </a>
                     }
                     else

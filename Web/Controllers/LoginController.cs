@@ -145,7 +145,7 @@ namespace ShoppingMall.Web.Controllers
         }
 
         public IActionResult Register()
-        {            
+        {
             RegisterUserViewModel model = new RegisterUserViewModel
             {
                 Cities = CitiesSelectItemList()
@@ -162,7 +162,7 @@ namespace ShoppingMall.Web.Controllers
                 Value = string.Empty,
                 Text = "請選擇縣市"
             });
-            
+
             return selectListItems;
         }
 
@@ -202,8 +202,8 @@ namespace ShoppingMall.Web.Controllers
             catch (Exception ex)
             {
 
-                ViewBag.ErrorMsg = string.Concat(RegisterVM.UserInfo.UserName, " ", "註冊失敗，請稍後再試");
-                success = false;                
+                ViewBag.ErrorMsg = string.Concat(RegisterVM.UserInfo.UserName, " ", "註冊失敗，請稍後再試", ex.Message);
+                success = false;
                 return View(RegisterVM);
                 // throw new Exception(ex.Message);
             }
@@ -252,7 +252,7 @@ namespace ShoppingMall.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 model.ResultMsg = "請正確填寫欄位";
                 return View(model);
@@ -260,7 +260,7 @@ namespace ShoppingMall.Web.Controllers
 
             User user = await _userService.GetUserForForgotPasswordAsync(model.UserName, model.Name, model.Email);
 
-            if(user == null)
+            if (user == null)
             {
                 model.ResultMsg = "找不到符合條件的使用者，請確認輸入的帳號、姓名和電子郵件是否正確";
                 return View(model);

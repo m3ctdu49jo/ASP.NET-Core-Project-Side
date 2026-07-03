@@ -12,7 +12,8 @@
         <div class="col-md-6 mb-4">
             @if (!string.IsNullOrEmpty(product.ImageUrl))
             {
-                <img src="/images/@product.ImageUrl" class="img-fluid rounded" alt="@product.ProductName">
+                string imageUrl = Url.Content(string.Format("~/{0}", product.ImageUrl));
+                <img src="@imageUrl" class="img-fluid rounded" alt="@product.ProductName">
             }
             else
             {

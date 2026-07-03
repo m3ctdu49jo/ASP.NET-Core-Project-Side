@@ -96,7 +96,7 @@ builder.Configuration.AddJsonFile(Path.Combine("DataFile/", "TaiwanCity.json"), 
 var app = builder.Build();
 
 // Exception Middleware ，.NET 8 前做法
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+// app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // 程式部署在 IIS、Nginx、Azure App Service 或 K8s Ingress
 // 通常會拿到 代理伺服器 (Proxy) 的 IP（例如 127.0.0.1 或 Load Balancer 的內部 IP）

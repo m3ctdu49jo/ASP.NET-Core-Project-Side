@@ -13,14 +13,14 @@ namespace ShoppingMall.Web.Infrastructure.Data
             context.Database.EnsureCreated();
 
             // 檢查是否已有資料
-            if (context.Suppliers.Any())
+            if (context.Products.Any())
             {
                 return;   // 資料庫已經有資料
             }
 
             // 添加類別
-            var categories = context.Categories.ToList();
-            /*var categories = new Category[]
+            // var categories = context.Categories.ToList();
+            var categories = new Category[]
             {
                 new Category { CategoryName = "飲料", Description = "軟性飲料、咖啡、茶、啤酒和淡啤酒" },
                 new Category { CategoryName = "調味品", Description = "甜味和鹹味醬汁、調味品、醬料和調味品" },
@@ -32,17 +32,19 @@ namespace ShoppingMall.Web.Infrastructure.Data
                 new Category { CategoryName = "海鮮", Description = "海鮮" }
             };
             context.Categories.AddRange(categories);
-            context.SaveChanges();*/
+            context.SaveChanges();
 
             // 添加供應商
-            var suppliers = new Supplier[]
-            {
-                new Supplier { CompanyName = "供應商A", ContactName = "張三", ContactTitle = "銷售經理", Address = "台北市信義區", City = "台北", Region = "北部", PostalCode = "110", Country = "台灣", Phone = "02-1234-5678", Fax = "02-1234-5679" },
-                new Supplier { CompanyName = "供應商B", ContactName = "李四", ContactTitle = "採購經理", Address = "高雄市前鎮區", City = "高雄", Region = "南部", PostalCode = "806", Country = "台灣", Phone = "07-1234-5678", Fax = "07-1234-5679" },
-                new Supplier { CompanyName = "供應商C", ContactName = "王五", ContactTitle = "行銷經理", Address = "台中市西屯區", City = "台中", Region = "中部", PostalCode = "407", Country = "台灣", Phone = "04-1234-5678", Fax = "04-1234-5679" }
-            };
-            context.Suppliers.AddRange(suppliers);
-            context.SaveChanges();
+            var suppliers = context.Suppliers.ToList();
+            // var suppliers = new Supplier[]
+            // {
+            //     new Supplier { CompanyName = "供應商A", ContactName = "張三", ContactTitle = "銷售經理", Address = "台北市信義區", City = "台北", Region = "北部", PostalCode = "110", Country = "台灣", Phone = "02-1234-5678", Fax = "02-1234-5679", CreatedDate = DateTime.Now },
+            //     new Supplier { CompanyName = "供應商B", ContactName = "李四", ContactTitle = "採購經理", Address = "高雄市前鎮區", City = "高雄", Region = "南部", PostalCode = "806", Country = "台灣", Phone = "07-1234-5678", Fax = "07-1234-5679", CreatedDate = DateTime.Now },
+            //     new Supplier { CompanyName = "供應商C", ContactName = "王五", ContactTitle = "行銷經理", Address = "台中市西屯區", City = "台中", Region = "中部", PostalCode = "407", Country = "台灣", Phone = "04-1234-5678", Fax = "04-1234-5679", CreatedDate = DateTime.Now }
+            // }
+            // ;
+            // context.Suppliers.AddRange(suppliers);
+            // context.SaveChanges();
 
             // 添加商品
             var products = new Product[]
@@ -58,7 +60,7 @@ namespace ShoppingMall.Web.Infrastructure.Data
                     ReorderLevel = 20,
                     Discontinued = false,
                     Description = "經典可口可樂，清爽解渴",
-                    ImageUrl = "https://example.com/cola.jpg",
+                    ImageUrl = "images/img01.jpg",
                     CreatedDate = DateTime.Now
                 },
                 new Product {
@@ -72,7 +74,7 @@ namespace ShoppingMall.Web.Infrastructure.Data
                     ReorderLevel = 10,
                     Discontinued = false,
                     Description = "香濃黑胡椒醬，適合牛排調味",
-                    ImageUrl = "https://example.com/pepper.jpg",
+                    ImageUrl = "images/img02.jpg",
                     CreatedDate = DateTime.Now
                 },
                 new Product {
@@ -86,7 +88,7 @@ namespace ShoppingMall.Web.Infrastructure.Data
                     ReorderLevel = 5,
                     Discontinued = false,
                     Description = "濃郁巧克力蛋糕，口感綿密",
-                    ImageUrl = "https://example.com/cake.jpg",
+                    ImageUrl = "images/img03.jpg",
                     CreatedDate = DateTime.Now
                 },
                 new Product {
@@ -100,7 +102,7 @@ namespace ShoppingMall.Web.Infrastructure.Data
                     ReorderLevel = 8,
                     Discontinued = false,
                     Description = "香濃切達起司，適合料理或直接食用",
-                    ImageUrl = "https://example.com/cheese.jpg",
+                    ImageUrl = "images/img04.jpg",
                     CreatedDate = DateTime.Now
                 },
                 new Product {
@@ -114,7 +116,7 @@ namespace ShoppingMall.Web.Infrastructure.Data
                     ReorderLevel = 12,
                     Discontinued = false,
                     Description = "義大利進口麵條，口感彈牙",
-                    ImageUrl = "https://example.com/pasta.jpg",
+                    ImageUrl = "images/img05.jpg",
                     CreatedDate = DateTime.Now
                 }
             };
@@ -122,4 +124,4 @@ namespace ShoppingMall.Web.Infrastructure.Data
             context.SaveChanges();
         }
     }
-} 
+}
