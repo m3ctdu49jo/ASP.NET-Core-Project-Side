@@ -12,6 +12,7 @@ namespace ShoppingMall.Web.TagHelpers
         public bool Required { get; set; } = false;
         public string Value { get; set; } = string.Empty;
         public string Placeholder { get; set; } = string.Empty;
+        public string Style { get; set; } = string.Empty;
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -32,7 +33,12 @@ namespace ShoppingMall.Web.TagHelpers
                 output.Attributes.SetAttribute("id", "");
             }
 
-            output.Attributes.SetAttribute("class", "px-2 py-2 rounded-0 rounded-top border-0 border-bottom border-secondary bg-light");
+            output.Attributes.SetAttribute("class", "px-2 py-3 rounded-10px input-border bg-light");
+            output.Attributes.SetAttribute("style", "width: 300px;");
+
+            if (!string.IsNullOrEmpty(Style))
+                output.Attributes.SetAttribute("style", Style);
+
             if (!string.IsNullOrEmpty(Value))
                 output.Attributes.SetAttribute("value", Value);
             if (!string.IsNullOrEmpty(Placeholder))

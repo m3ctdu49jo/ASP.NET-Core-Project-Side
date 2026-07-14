@@ -1,8 +1,99 @@
-﻿
-@{
-    ViewData["Title"] = "Home Page";
+﻿@{
+    ViewData["Title"] = "首頁";
+}
+@section Styles {
+    <style>
+    </style>
+}
+@section banner {
+    <div class="banner-box bg-light">
+        <img class="img-fluid" src="~/images/home/pexels-banner2.jpg" />
+    </div>
 }
 
-<script>
+
+
+<div class="d-flex justify-content-between mb-5">
+    <div class="flex-grow-1">
+        <h2 class="p-3 ps-0 pt-5 mb-3 fw-bold">
+            」盆栽販賣所
+        </h2>
+        <ul class="row row-cols-md-4 g-5 list-unstyled">
+            @for (int i = 1; i <= 4; i++)
+            {
+                var productName = i % 2 != 0 ? "Green Corner 植感角落" : "Leaf Lounge 棲葉美學";
+                <li class="d-block mb-3" style="transform: translateY(@(i % 2 != 0 ? 0 : 45 + "px")); ">
+                    <a href=" #" class="d-block text-decoration-none overflow-hidden rounded-10px box-shadow-rgba-20"
+                       style="background-color: #f8f9fa;">
+                        <div class="position-relative">
+                            <img src="~/images/home/hot/h-@(i).jpg"
+                                 class="text-decoration-none object-fit-cover object-position-50-50 w-100 h-100" />
+                            <div class="p-2 px-3 position-absolute bottom-0 start-0 w-100 bg-dark-rgba-15">
+                                <strong class="d-block text-white">@productName</strong>
+                                <span class="text-warning fw-bold">$@(1699 / i)</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+
+<div class="d-flex justify-content-between mt-5">
+    <div class="flex-grow-1">
+        <h2 class="p-3 ps-0 pt-5 mb-3 fw-bold">
+            」植栽盆栽分享
+        </h2>
+        <ul class="row row-cols-md-3 g-5 list-unstyled">
+            @for (int i = 1; i <= 3; i++)
+            {
+                var title = "";
+
+                string txt = "";
+                switch (i)
+                {
+                    case 1:
+                        title = "我的綠色新朋友長高了";
+                        txt = "今天盆栽探出了小綠頭。天天跟它說話，它是不是聽懂了？";
+                        break;
+                    case 2:
+                        title = "自己捏的苔球圓滾滾";
+                        txt = "把泥土搓成像冰淇淋的圓球，幫它穿上青苔外衣，真好玩！";
+                        break;
+                    case 3:
+                        title = "房間裡住了一棵小森林";
+                        txt = "陽光照在葉子上閃閃發亮。有它在，好像把春天帶回家了。";
+                        break;
+                }
+                <li class="d-block mb-3">
+                    <a href=" #" class="d-block text-decoration-none overflow-hidden rounded-10px box-shadow-rgba-20"
+                       style="background-color: #f8f9fa;">
+                        <div class="position-relative">
+                            <img src="~/images/home/shared/sd-@(i).jpg"
+                                 class="text-decoration-none  object-fit-cover object-position-50-50 w-100 h-100" />
+                            <div class="p-2 px-4 pb-4 position-absolute bottom-0 start-0 w-100"
+                                 style="background-color: rgba(0, 0, 0, 0.15);">
+                                <strong class="d-block text-warning fs-4 mb-2">@title</strong>
+                                <span class="text-white fw-bold">@txt</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+
+<div class="d-flex justify-content-evenly align-items-center mt-8" style="height: 500px; background-color: #f8f9fa; ">
+
+    <span style="font-size: 2.1rem; ">」用一抹綠意溫潤日常角落<br />親手組一盆植栽，讓生活優雅發芽。</span>
+
+    <span class="text-green" style="font-size: 3.5rem;writing-mode: vertical-rl;">」植感角落「</span>
+</div>
+
+@* <script>
     location.href = '@Url.Action("Index", "Product")';
-</script>
+</script> *@

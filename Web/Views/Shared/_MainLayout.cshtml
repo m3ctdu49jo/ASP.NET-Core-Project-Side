@@ -1,0 +1,124 @@
+﻿@using System.Security.Claims
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    @await RenderSectionAsync("Meta", required: false)
+    <title>@ViewData["Title"] - 植感角落</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ShoppingMall.styles.css" asp-append-version="true" />
+    <script src="~/js/Util.js"></script>
+    @await RenderSectionAsync("Styles", required: false)
+    @await RenderSectionAsync("HeadScripts", required: false)
+</head>
+
+<body>
+    <header class="bg-white border-bottom box-shadow">
+        <div class="container position-relative">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand fs-2 me-5 text-green" asp-area="" asp-controller="Home" asp-action="Index">植
+                        感 角 落</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                            <ul class="navbar-nav flex-grow-1">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark fs-5" asp-area="" asp-controller="Product"
+                                       asp-action="Index">」植感角落介紹</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark fs-5" asp-area="" asp-controller="Product"
+                                       asp-action="Index">」盆栽販賣所</a>
+                                </li>
+                            </li>
+                        </ul>
+                        <div class="d-sm-block border-bottom border-secondary opacity-50"></div>
+
+                        <div class="p-3 ps-0">
+                            @if (User.Identity == null || !User.Identity.IsAuthenticated)
+                            {
+                                <font class="text-grey fs-6 me-2">//</font>
+                                <a class="text-dark text-decoration-none" asp-area="" asp-controller="Login"
+                                   asp-action="Index">會員登入</a>
+                            }
+                            else
+                            {
+                                <font> Hi, </font>
+                                <a asp-action="UserCenter" asp-controller="Users" class="fw-bold d-inline-block me-3"
+                                   style="color:rgb(22, 104, 172)">@User.FindFirst(ClaimTypes.GivenName)?.Value</a>
+                                <a class="text-dark text-decoration-none" asp-area="" asp-controller="ShoppingCart"
+                                   asp-action="Checkout">🛒購物車</a>
+                                <font class="text-grey fs-6 mx-1">//</font>
+                                <a class="text-dark text-decoration-none" asp-area="" asp-controller="Login"
+                                   asp-action="Logout">登出</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    @await RenderSectionAsync("banner", required: false)
+    <div style="background: url('/images/background3.jpg')  center center;">
+        <div class="container pb-5">
+            <main role="main" class="p-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container pb-5">
+            <div class="py-5 fs-6 text-black-50">
+                Copyright © 植感角落 All Rights Reserved.
+            </div>
+            <div class="d-flex justify-content-between align-items-top">
+                <div class="d-flex flex-column gap-4 ">
+                    <div>
+                        <div class="text-dark fw-bold fs-4 mb-1">站內連結</div>
+                        <div class="d-flex flex-column gap-1">
+                            <a class="text-dark text-decoration-none" href="#">」植感角落介紹</a>
+                            <a class="text-dark text-decoration-none" href="#">」盆栽販賣所</a>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-dark fw-bold fs-4 mb-1">社群連結</div>
+                        <div class="d-flex gap-4">
+                            <a href="#">Facebook</a>
+                            <a href="#">Instagram</a>
+                            <a href="#">Youtube</a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="text-dark fw-bold fs-4 mb-1">聯絡資訊</div>
+                    <div class="d-flex flex-column gap-1">
+                        <div>Tel: 02-1234-5678</div>
+                        <div>Email: info@shoppingmall.com</div>
+                        <div>Address: 範例市範例區範例路一段123號</div>
+                    </div>
+                </div>
+
+            </div>
+        </footer>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+        <script>
+            builderMsgBoxes();
+        </script>
+    </body>
+
+</html>

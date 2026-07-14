@@ -1,15 +1,23 @@
 ﻿@model IEnumerable<ProductCollectionDTO>
 
-<ul class="row p-0">        
+
+<ul class="row p-0">
     @foreach (var item in Model)
     {
         <li class="col-md-3 mb-4 list-unstyled">
-            <div class="card h-100">
+            <div class="card h-100 border-0">
                 @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
                 {
                     string imageUrl = Url.Content(string.Format("~/{0}", item.Product.ImageUrl));
-                    <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductID">
-                        <img src="@imageUrl" class="card-img-top" alt="@item.Product.ProductName">
+                    <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductID"
+                       class="collect_img_box position-relative d-block text-decoration-none rounded overflow-hidden">
+                        <img src="@imageUrl" class="object-fit-cover object-position-50-50 w-100 h-100"
+                             alt="@item.Product.ProductName">
+
+                        <span class="cancel-collect-btn position-absolute end-0 top-0 me-3 mt-3"
+                              data-product-id="@item.ProductID">
+                            收藏
+                        </span>
                     </a>
                 }
                 else
@@ -18,18 +26,16 @@
                         <i class="fas fa-image fa-3x text-muted"></i>
                     </div>
                 }
-                <div class="card-body d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center px-2 py-2">
                     <div>
-                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductID" class="card-title text-decoration-none fs-5">@item.Product.ProductName</a>
+                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductID"
+                           class="card-title text-decoration-none fs-6 text-dark">@item.Product.ProductName</a>
                         <p class="card-text">
                             @if (item.Product.UnitPrice.HasValue)
                             {
-                                <span class="text-danger">NT$ @item.Product.UnitPrice.Value.ToString("N0")</span>
+                                <span class="text-yellow fs-7">NT$ @item.Product.UnitPrice.Value.ToString("N0")</span>
                             }
                         </p>
-                    </div>
-                    <div class="cancel-collect-btn" data-product-id="@item.ProductID">
-                        取消收藏
                     </div>
                 </div>
             </div>

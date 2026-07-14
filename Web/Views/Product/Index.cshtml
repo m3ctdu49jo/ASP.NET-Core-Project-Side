@@ -1,7 +1,7 @@
 @model IEnumerable<ProductDTO>
 
 @{
-    ViewData["Title"] = ViewBag.Title ?? "商品列表";
+    ViewData["Title"] = ViewBag.Title ?? "」盆栽販賣所";
 }
 
 @section Styles {
@@ -11,9 +11,11 @@
             -webkit-appearance: none;
             margin: 0;
         }
+
         .purch_num {
             width: 60px;
         }
+
         .card-footer {
             font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
@@ -24,10 +26,11 @@
     @await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
 
     <div class="row mb-4">
-        <div class="col">
+        <div class="col-md-6">
             <form asp-action="Search" method="get" class="form-inline">
                 <div class="input-group">
-                    <input type="text" name="searchTerm" class="form-control" placeholder="搜尋商品..." value="@ViewBag.SearchTerm">
+                    <input type="text" name="searchTerm" class="form-control me-2" placeholder="搜尋商品..."
+                           value="@ViewBag.SearchTerm">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-outline-secondary">搜尋</button>
                     </div>
@@ -35,41 +38,51 @@
             </form>
         </div>
     </div>
+    @{
 
-    <div class="row">
-        @foreach (var item in Model)
+        var fakeList = Model.ToList();
+        fakeList.AddRange(Model.Reverse());
+        fakeList.AddRange(Model);
+        fakeList.AddRange(Model.Reverse());
+    }
+    <div class="col-count-3 col-gap-1 w-100">
+        @foreach (var item in fakeList)
         {
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    @if (!string.IsNullOrEmpty(item.ImageUrl))
-                    {
-                        string imageUrl = Url.Content(string.Format("~/{0}", item.ImageUrl));
-                        <a asp-action="Details" asp-route-id="@item.ProductID">
-                            <img src="@imageUrl" class="card-img-top" alt="@item.ProductName">
+            <div class="card-box break-inside-avoid d-inline-block mb-4 w-100 overflow-hidden rounded-20px">
+                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                {
+                    string imageUrl = Url.Content(string.Format("~/{0}", item.ImageUrl));
+                    <a asp-action="Details" asp-route-id="@item.ProductID"
+                       class="d-block position-relative text-decoration-none">
+                        <img src="@imageUrl" class="card-img-top w-100 h-100 object-fit-cover object-position-50-50"
+                             alt="@item.ProductName">
 
-                        </a>
-                    }
-                    else
-                    {
-                        <div class="card-img-top bg-light text-center py-5">
-                            <i class="fas fa-image fa-3x text-muted"></i>
-                        </div>
-                    }
-                    <div class="card-body">
-                        <a asp-action="Details" asp-route-id="@item.ProductID" class="card-title text-decoration-none fs-5">@item.ProductName</a>
-                        <p class="card-text text-muted">@item.CategoryName</p>
-                        <p class="card-text">
-                            @if (item.UnitPrice.HasValue)
-                            {
-                                <span class="text-danger">NT$ @item.UnitPrice.Value.ToString("N0")</span>
-                            }
-                        </p>
+                        <span class="card-body d-block position-absolute top-0 start-0 w-100 text-end">
+                            @* <p class="card-text text-muted">@item.CategoryName</p> *@
+                            <p class="py-1 px-3 m-0 bg-dark-rgba-35 d-inline-block border"
+                               style="border-radius: 10px 10px 10px 30px; min-width: 115px;">
+                                <span class="text-white fs-6 d-block">
+                                    @item.ProductName
+                                </span>
+
+                                @if (item.UnitPrice.HasValue)
+                                {
+                                    <span class="text-warning fs-5 d-block">NT$ @item.UnitPrice.Value.ToString("N0")</span>
+                                }
+                            </p>
+                        </span>
+                    </a>
+                }
+                else
+                {
+                    <div class="card-img-top bg-light text-center break-inside-avoid mb-4">
+                        <i class="fas fa-image fa-3x text-muted"></i>
                     </div>
-                </div>
+                }
             </div>
         }
     </div>
-</div> 
+</div>
 
 @section Scripts {
     <script>

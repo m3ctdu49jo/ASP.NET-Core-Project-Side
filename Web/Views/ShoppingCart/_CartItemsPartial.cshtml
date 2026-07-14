@@ -1,36 +1,50 @@
 @model IEnumerable<ShoppingCartDTO>
 
 <div id="checkout-cart-items">
-    @if(Model.Any()){
+    @if (Model.Any())
+    {
         var totalAmount = Model.Sum(item => item.Product.UnitPrice * item.PurchCount);
         @foreach (var item in Model)
         {
             <div class="d-flex justify-content-between align-items-center mb-3 border-bottom">
-                <div>
-                    <h5 class="mb-3">@item.Product.ProductName</h5>
-                    <p>
-                        單價: NT$ @item.Product.UnitPrice<br />
-                        數量: <span class="d-inline-block"><span class="input-group w-auto">
-                            <input id="@(string.Concat("purchNum_", item.Product.ProductID))" name="Count" type="number" min="1" max="@item.Product.UnitsInStock" class="purch_num text-center fs-8 border-0 border-top border-bottom" value="@item.PurchCount" />
-                        </span></span><br />
-                        小計: NT$ @(item.Product.UnitPrice * item.PurchCount)
-                    </p>
-                </div>
-                <div>
-                    <form asp-action="RemoveFromCart" method="post" class="d-inline">
-                        <input type="hidden" name="productId" value="@item.Product.ProductID" />
-                        <button type="button" class="btn btn-danger remove-cart-item">移除</button>
-                    </form>
+                <div class="d-flex gap-4">
+                    <div style="width: 150px;height: 120px"><img src="~/@(item.Product.ImageUrl)" class="object-fit-cover object-position-50-50 w-100
+                        h-100" />
+                    </div>
+                    <div class="d-flex flex-column gap-1 pb-3">
+                        <div class="fs-5"><a href="@Url.Action("Details", "Product", new { id = @item.Product.ProductID })"
+                                                 class="text-decoration-none">@item.Product.ProductName</a>
+                        </div>
+                        <div>NT$ @item.Product.UnitPrice</div>
+                        <div>
+                            數量: <span class="d-inline-block"><span class="input-group w-auto">
+                            <input id="@(string.Concat("purchNum_", item.Product.ProductID))" name="Count" type="number"
+                                   min="1" max="@item.Product.UnitsInStock"
+                                   class="purch_num text-center fs-8 border-0 border-top border-bottom"
+                                   value="@item.PurchCount" />
+                        </span></span>
+                    </div>
+                    <div>小計: <font class="text-danger">NT$ @(item.Product.UnitPrice * item.PurchCount)</font>
+                    </div>
                 </div>
             </div>
-        }
-        <div class="text-end">總計： NT$ @totalAmount</div>
-    }
-    else 
-    {
-        <div class="alert alert-info">
-            <p>您的購物車是空的。</p>
+
+            <div>
+                <form asp-action="RemoveFromCart" method="post" class="d-inline">
+                    <input type="hidden" name="productId" value="@item.Product.ProductID" />
+                    <button type="button" class="btn btn-danger remove-cart-item">移除</button>
+                </form>
+            </div>
         </div>
     }
+    <div class="text-end">總計： <font class="text-danger">NT$ @totalAmount</font>
+    </div>
+}
+    else
+{
+    <div class="alert alert-info">
+        <p>您的購物車是空的。</p>
+    </div>
+}
 
 </div>

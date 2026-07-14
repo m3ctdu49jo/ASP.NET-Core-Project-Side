@@ -8,7 +8,9 @@
 
 @await Html.PartialAsync("_CartItemsPartial", Model)
 
-@* <button id="checkoutBtn" class="btn btn-primary">結帳</button> *@
+<div class="d-flex justify-content-end mt-4">
+    <button id="checkoutBtn" class="btn btn-warning">買單去</button>
+</div>
 
 @section Scripts {
     <script src="~/js/cart.js"></script>

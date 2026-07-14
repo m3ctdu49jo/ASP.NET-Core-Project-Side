@@ -1,14 +1,16 @@
 @model EditUserInfoViewModel
 @{
-    ViewData["Title"] = "會員資料修改";
+    ViewData["Title"] = "」會員資料修改";
 }
 @section Styles {
     <style>
         #edit-box div {
             display: flex;
+            align-items: center;
         }
+
         .form-group label {
-            text-align: right;
+            text-align: left;
             width: 80px;
             margin-right: 1rem
         }
@@ -17,7 +19,7 @@
 
 @await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
 
-@if(!string.IsNullOrEmpty(Model.ResultMsg))
+@if (!string.IsNullOrEmpty(Model.ResultMsg))
 {
     <p class="text-danger">@Model.ResultMsg</p>
 }
@@ -31,7 +33,7 @@
     </div>
     <div class="form-group mb-2">
         <label asp-for="UserInfo.Password" class="color-blue-3"></label>
-        <span>********** <a asp-action="ChangePassword" class="btn btn-warning">更改密碼</a></span>
+        <span>****** <a asp-action="ChangePassword" class="btn-link">更改密碼</a></span>
     </div>
     <div class="form-group mb-2">
         <label asp-for="UserInfo.Name" class="color-blue-3"></label>

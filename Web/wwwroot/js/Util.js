@@ -3,14 +3,14 @@
  * 當輸入值小於 1 或不是數字時，自動將值設為 1。
  * @param {Element} inputElem - CSS 選擇器字串，例如 '#inputId' 或 '.inputClass'
  */
-function detectNumScopeBlurEvent(inputElem){
-    document.querySelectorAll(inputElem).forEach(item => {        
+function detectNumScopeBlurEvent(inputElem) {
+    document.querySelectorAll(inputElem).forEach(item => {
         item.addEventListener("blur", (e) => {
             let elem = e.target
-            if(elem && (elem.value < 1 || isNaN(Number(elem.value)))) 
+            if (elem && (elem.value < 1 || isNaN(Number(elem.value))))
                 elem.value = 1;
             let n = Number(elem.value);
-            if(elem.max < n)
+            if (elem.max < n)
                 elem.value = elem.max;
         });
     });
@@ -48,25 +48,25 @@ function detectNumScopeBlurEvent(inputElem){
  * 生成加減數量按鈕與綁定點擊事件
  * @param {HTMLInputElement} inputElem 
  */
-function inputNumBuildBtnsClickEvent(inputElem, btnClickCallback) {    
-    let {plusBtn, minusBtn} = buildPlusMinusBtn(inputElem);
-    
+function inputNumBuildBtnsClickEvent(inputElem, btnClickCallback) {
+    let { plusBtn, minusBtn } = buildPlusMinusBtn(inputElem);
+
     plusBtn.addEventListener("click", (e) => {
         let n = Number(inputElem.value);
         let isSafeCount = true;
-        if(inputElem.max > n)
+        if (inputElem.max > n)
             inputElem.value = n + 1;
-        else{
+        else {
             inputElem.value = inputElem.max;
             isSafeCount = false;
             showMsg("已達商品最大購買量");
         }
-        if(btnClickCallback && typeof btnClickCallback === "function" && isSafeCount)
+        if (btnClickCallback && typeof btnClickCallback === "function" && isSafeCount)
             btnClickCallback(inputElem.value);
     });
     minusBtn.addEventListener("click", (e) => {
         let isSafeCount = true;
-        if(inputElem.value > inputElem.min)
+        if (inputElem.value > inputElem.min)
             inputElem.value = inputElem.value - 1;
         else {
             inputElem.value = inputElem.min;
@@ -74,17 +74,17 @@ function inputNumBuildBtnsClickEvent(inputElem, btnClickCallback) {
             showMsg("已達商品最小購買量");
         }
 
-        if(btnClickCallback && typeof btnClickCallback === "function")
+        if (btnClickCallback && typeof btnClickCallback === "function")
             btnClickCallback(inputElem.value);
     });
 
     inputElem.addEventListener("blur", (e) => {
-        if(btnClickCallback && typeof btnClickCallback === "function")
+        if (btnClickCallback && typeof btnClickCallback === "function")
             btnClickCallback(inputElem.value);
     });
-        
 
-    function buildPlusMinusBtn(inputElem){
+
+    function buildPlusMinusBtn(inputElem) {
         let plusBtn = document.createElement("div");
         plusBtn.className = "btn btn-light plus_btn border border-1";
         plusBtn.classList.add("plus_btn");
@@ -95,22 +95,22 @@ function inputNumBuildBtnsClickEvent(inputElem, btnClickCallback) {
         minusBtn.textContent = "-";
         inputElem.insertAdjacentElement("beforebegin", minusBtn);
         inputElem.insertAdjacentElement("afterend", plusBtn);
-        return {plusBtn, minusBtn};
+        return { plusBtn, minusBtn };
     }
 }
 
 
-function builderMsgBoxes(){      
-    CreateCoverElem();   
+function builderMsgBoxes() {
+    CreateCoverElem();
     CreateMessageElem();
     CreateAlertElem();
 }
-function CreateCoverElem(){
+function CreateCoverElem() {
     let coverBox = document.createElement("div");
     coverBox.id = "coverBox";
-    document.querySelector("body").append(coverBox);   
+    document.querySelector("body").append(coverBox);
 }
-function CreateMessageElem(){
+function CreateMessageElem() {
     let coverBox = document.querySelector("#coverBox");
     let msgBox = document.createElement("div");
     let msgSpan = document.createElement("span");
@@ -118,7 +118,7 @@ function CreateMessageElem(){
     msgBox.append(msgSpan);
     coverBox.append(msgBox);
 }
-function CreateAlertElem(){
+function CreateAlertElem() {
     let coverBox = document.querySelector("#coverBox");
     let alertBox = document.createElement("div");
     let closeBtn = document.createElement("div");
@@ -133,34 +133,34 @@ function CreateAlertElem(){
     });
 }
 
-function showMsg(msg){
+function showMsg(msg) {
     let coverBox = document.querySelector("#coverBox");
-    if(!coverBox){
+    if (!coverBox) {
         builderMsgBoxes();
     }
-    
+
     coverBox = document.querySelector("#coverBox");
     let msgBox = document.querySelector("#msgBox");
     let msgSpan = msgBox.querySelector("span");
 
-    msgSpan.textContent = msg; 
+    msgSpan.textContent = msg;
     coverBox.classList.add("show-msg")
     setTimeout(() => {
         coverBox.classList.remove("show-msg")
     }, 2500)
 }
 
-function showAlert(msg){
+function showAlert(msg) {
     let coverBox = document.querySelector("#coverBox");
-    if(!coverBox){
+    if (!coverBox) {
         builderMsgBoxes();
     }
-    
+
     coverBox = document.querySelector("#coverBox");
     let alertBox = document.querySelector("#alertBox");
     let alertSpan = alertBox.querySelector("span");
-    alertSpan.textContent = msg; 
-    
+    alertSpan.textContent = msg;
+
     coverBox.classList.add("show-alert");
 }
 /**
@@ -168,14 +168,14 @@ function showAlert(msg){
  * @param {Object} [additionalHeaders] - 要額外合併的 headers 物件
  * @returns {Object} 合併後的 headers 物件
  */
-function fetchHeaders(additionalHeaders){
+function fetchHeaders(additionalHeaders) {
     var header = {
         "Content-Type": "application/json",
         "Fetch-Request": "true"
     }
-    if(JSON.stringify(additionalHeaders) !== "{}")
+    if (JSON.stringify(additionalHeaders) !== "{}")
         header = Object.assign(header, additionalHeaders);
-    
+
     return header;
 }
 
@@ -186,18 +186,18 @@ function fetchHeaders(additionalHeaders){
  * @param {Function} successCallback - 200 狀態碼，執行動作
  * @returns 
  */
-async function fetchStatusCheck(response, successCallback){
-    switch(response.status){
-        case 200 :
+async function fetchStatusCheck(response, successCallback) {
+    switch (response.status) {
+        case 200:
             successCallback();
             return;
-        case 400 :
+        case 400:
             showAlert("✖ " + await response.text());
             return;
-        case 401 :
+        case 401:
             showAlert("⚠️ 請登入會員或註冊會員帳號");
             return;
-        default :
+        default:
             showAlert("✖ 發生未知錯誤，請稍後再試");
             return;
     }

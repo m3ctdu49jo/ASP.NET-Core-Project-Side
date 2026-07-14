@@ -1,34 +1,139 @@
 html {
-  font-size: 14px;
-  height: 100%;
+    font-size: 14px;
+    height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
-  margin: 0;
-  padding: 0;
+    position: relative;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  height: 100%;
-  margin-bottom: 60px;
-  margin: 0;
-  padding: 0;
+    height: 100%;
+    margin-bottom: 60px;
+    margin: 0;
+    padding: 0;
 }
 
 .color-blue-3 {
-  color: #455c8d;
+    color: #455c8d;
+}
+
+.rounded-10px {
+    border-radius: 10px;
+}
+
+.rounded-20px {
+    border-radius: 20px;
+}
+
+.box-shadow-rgba-20 {
+    box-shadow: 20px 20px 40px rgba(0, 0, 0, .2);
+}
+
+.fs-7 {
+    font-size: 0.95rem;
+}
+
+.text-grey-aaa,
+.text-gray-aaa {
+    color: #aaa;
+}
+
+.text-grey,
+.text-gray {
+    color: #ccc;
+}
+
+.text-yellow,
+.text-yellow {
+    color: #f3ab00;
+}
+
+.text-green {
+    color: #6ab54d !important;
+}
+
+.text-green:hover {
+    color: #40a717 !important
+}
+
+.mt-6 {
+    margin-top: 3.5rem;
+}
+
+.mt-7 {
+    margin-top: 4rem;
+}
+
+.mt-8 {
+    margin-top: 5rem;
+}
+
+.mb-6 {
+    margin-bottom: 3.5rem;
+}
+
+.mb-7 {
+    margin-bottom: 4rem;
+}
+
+.mb-8 {
+    margin-bottom: 5rem;
+}
+
+.bg-dark-rgba-15 {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.bg-dark-rgba-35 {
+    background-color: rgba(0, 0, 0, 0.35);
+}
+
+.border-bbb {
+    border-color: #bbb !important;
+}
+
+.input-border {
+    border: 1px solid #e4e4e4;
+    border-bottom-color: #bbb;
+    border-bottom-width: 3px;
+}
+
+.col-count-3 {
+    column-count: 3;
+}
+
+.col-gap-1 {
+    column-gap: 1rem;
+}
+
+.break-inside-avoid {
+    break-inside: avoid;
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.object-position-50-50 {
+    object-position: 50% 50%;
 }
 
 /*----- 購物車相關 -----*/
@@ -37,9 +142,11 @@ input.purch_num[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 .purch_num {
     width: 60px;
 }
+
 /*----- 購物車相關 End -----*/
 
 /*----- Message, Alert 訊息框 -----*/
@@ -56,7 +163,9 @@ input.purch_num[type=number]::-webkit-inner-spin-button {
     visibility: hidden;
     transition: all .8s ease;
 }
-#msgBox, #alertBox {
+
+#msgBox,
+#alertBox {
     font-size: 1.4rem;
     display: flex;
     align-items: center;
@@ -70,42 +179,52 @@ input.purch_num[type=number]::-webkit-inner-spin-button {
     padding: 20px 30px;
     border-radius: 15px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, .3);
-    position: absolute;    
+    position: absolute;
     visibility: hidden;
     transform: translateY(400%);
     transition: all .8s ease;
 }
+
 #msgBox {
     bottom: 0;
 }
+
 #alertBox span {
-  margin-top: 40px;
-  margin-bottom: 30px;
+    margin-top: 40px;
+    margin-bottom: 30px;
 }
-#coverBox.show-msg, #coverBox.show-alert {
+
+#coverBox.show-msg,
+#coverBox.show-alert {
     background: rgba(255, 255, 255, .5);
     visibility: visible;
 }
+
 #coverBox.show-alert #alertBox {
     transform: translateY(0);
     visibility: visible;
 }
+
 #coverBox.show-msg #msgBox {
     transform: translateY(-50px);
     animation: msgBoxColorAnim .5s linear forwards 2 .5s;
     visibility: visible;
 }
+
 @keyframes msgBoxColorAnim {
     0% {
         background: #ffffff;
     }
+
     50% {
         background: rgba(255, 174, 1, 0.3);
     }
+
     100% {
         background: #ffffff;
     }
 }
+
 #coverBox #closeBtn {
     display: flex;
     align-items: center;
@@ -120,9 +239,11 @@ input.purch_num[type=number]::-webkit-inner-spin-button {
     cursor: pointer;
     transition: all .5s ease;
 }
+
 #coverBox #closeBtn:hover {
     background: rgba(245, 33, 33, 0.8);
 }
+
 #coverBox #closeBtn::after {
     content: "";
     background: #fff;
@@ -131,6 +252,7 @@ input.purch_num[type=number]::-webkit-inner-spin-button {
     transform: rotate(-45deg);
     position: absolute;
 }
+
 #coverBox #closeBtn::before {
     content: "";
     background: #fff;
@@ -143,4 +265,5 @@ input.purch_num[type=number]::-webkit-inner-spin-button {
 #coverBox #closeBtn.hid {
     display: none;
 }
+
 /*----- Message, Alert 訊息框 End -----*/
