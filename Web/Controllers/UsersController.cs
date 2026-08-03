@@ -10,6 +10,7 @@ using ShoppingMall.Web.DTOs;
 using ShoppingMall.Web.Filters;
 using ShoppingMall.Web.Infrastructure.Services;
 using ShoppingMall.Web.Models;
+using ShoppingMall.Web.Models.Enums;
 using ShoppingMall.Web.Utils;
 using ShoppingMall.Web.ViewModels;
 
@@ -23,13 +24,25 @@ namespace ShoppingMall.Web.Controllers
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
         private readonly IProductCollectionService _productCollectionService;
+        private readonly IOrderService _orderService;
+        private readonly IOrderDetailService _orderDetailService;
 
-        public UsersController(IUserService userService, IMapper mapper, IConfiguration config, IProductCollectionService productCollectionService)
+        public UsersController
+        (
+            IUserService userService,
+            IMapper mapper,
+            IConfiguration config,
+            IProductCollectionService productCollectionService,
+            IOrderService orderService,
+            IOrderDetailService orderDetailService
+        )
         {
             _mapper = mapper;
             _userService = userService;
             _config = config;
             _productCollectionService = productCollectionService;
+            _orderService = orderService;
+            _orderDetailService = orderDetailService;
         }
 
         // GET: UsersController
@@ -53,19 +66,19 @@ namespace ShoppingMall.Web.Controllers
             var user = await _userService.GetByIdAndUserNameAsync(userId, User.Identity?.Name ?? "");
             if (user == null)
                 return NotFound();
-                
+
             try
             {
                 var cities = ConfigUtil.GetTaiwanCitisSection(_config);
                 EditUserInfoViewModel EditUserVM = new EditUserInfoViewModel()
-                { 
+                {
                     UserInfo = _mapper.Map<UserDTO>(user),
                     Cities = CitiesSelectItemList()
                 };
 
                 var selectedItem = EditUserVM.Cities.Find(x => x.Text == user.City);
                 if (selectedItem != null)
-                    selectedItem.Selected = true;            
+                    selectedItem.Selected = true;
 
                 return View(EditUserVM);
             }
@@ -78,13 +91,13 @@ namespace ShoppingMall.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditUserInfoViewModel EditUserInfoVM)
-        {            
+        {
             // 資料重新填充
             EditUserInfoVM.Cities = CitiesSelectItemList();
             var selectedItem = EditUserInfoVM.Cities.Find(x => x.Text == EditUserInfoVM.UserInfo.City);
-            if(selectedItem != null)
+            if (selectedItem != null)
                 selectedItem.Selected = true;
-                
+
             if (!ModelState.IsValid)
             {
                 return View(EditUserInfoVM);
@@ -96,8 +109,8 @@ namespace ShoppingMall.Web.Controllers
             {
                 var user = await _userService.GetByIdAndUserNameAsync(userId, userInfo.UserName ?? string.Empty);
                 if (user == null || user.UserId != userId)
-                    return NotFound();       
-                
+                    return NotFound();
+
                 if (user.UpdateDate.HasValue && DateTime.Compare(user.UpdateDate.GetValueOrDefault().AddSeconds(10), DateTime.Now) > 0)
                 {
                     EditUserInfoVM.ResultMsg = "資料更新過於頻繁，請稍後再試";
@@ -128,7 +141,7 @@ namespace ShoppingMall.Web.Controllers
                 Value = string.Empty,
                 Text = "請選擇縣市"
             });
-            
+
             return selectListItems;
         }
 
@@ -156,8 +169,8 @@ namespace ShoppingMall.Web.Controllers
             {
                 model.ResultMessage = "新密碼與確認新密碼不一致，請重新輸入";
                 return View(model);
-            } 
-            
+            }
+
             try
             {
                 await _userService.UpdateUserPasswordAsync(user, model.NewPassword);
@@ -203,7 +216,46 @@ namespace ShoppingMall.Web.Controllers
             {
                 return BadRequest(ex.Message);
             }
-                return Ok();
+            return Ok();
+        }
+
+        public async Task<IActionResult> OrderList()
+        {
+            try
+            {
+                var item = await _orderService.GetOrdersByUserID(Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+
+                return View(item);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        public async Task<IActionResult> OrderInfo([FromQuery] string number)
+        {
+            try
+            {
+                var order = await _orderService.GetOrderByOrderNumAndUserID(number, Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+                var orderDetails = await _orderDetailService.GetByOrderNum(number, Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+
+                if (!orderDetails.Any())
+                    return NotFound();
+
+                var item = new UsersOrderInfoViewModel()
+                {
+                    OrderDTO = _mapper.Map<OrderDTO>(order),
+                    OrderDetailDTOs = _mapper.Map<IEnumerable<OrderDetailDTO>>(orderDetails),
+                    PaymentName = ((PaymentStatus)Convert.ToInt32(order.Payment ?? 0)).GetDisplayName(),
+                    StatusName = ((OrderStatus)Convert.ToInt32(order.Status ?? 0)).GetDisplayName()
+                };
+
+                return View(item);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

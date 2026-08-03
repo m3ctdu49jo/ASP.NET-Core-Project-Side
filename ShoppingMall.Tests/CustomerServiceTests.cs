@@ -26,7 +26,7 @@ namespace ShoppingMall.Tests
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockMapper = new Mock<IMapper>();
             _mockCustomerRepository = new Mock<IRepository<Customer>>();
-            
+
             _mockUnitOfWork.Setup(uow => uow.Customers).Returns(_mockCustomerRepository.Object);
             _customerService = new CustomerService(_mockUnitOfWork.Object, _mockMapper.Object);
         }
@@ -58,7 +58,7 @@ namespace ShoppingMall.Tests
         public async Task GetCustomerByIdAsync_ExistingId_ReturnCustomerDTO2()
         {
             // Arrange
-            var customerId= "ALFKI";
+            var customerId = "ALFKI";
             var customer = new Customer { CustomerID = "ALFKI" };
             var customerDto = new CustomerDTO { CustomerID = "ALFKI" };
 
@@ -129,4 +129,4 @@ namespace ShoppingMall.Tests
 
         }
     }
-} 
+}

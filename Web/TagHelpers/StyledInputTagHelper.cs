@@ -43,8 +43,6 @@ namespace ShoppingMall.Web.TagHelpers
                 output.Attributes.SetAttribute("value", Value);
             if (!string.IsNullOrEmpty(Placeholder))
                 output.Attributes.SetAttribute("placeholder", Placeholder);
-            if (Required)
-                output.Attributes.SetAttribute("required", "required");
         }
     }
 }

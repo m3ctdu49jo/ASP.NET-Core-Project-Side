@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ShoppingMall.Web.Filters;
+
 public class AuthenticatedFilter : IActionFilter
 {
     public void OnActionExecuting(ActionExecutingContext context)

@@ -6,6 +6,11 @@ namespace ShoppingMall.Web.Models
     public class OrderDetail
     {
         public int OrderID { get; set; }
+
+        [Key]
+        public string OrderNum { get; set; }
+
+        [Key]
         public int ProductID { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
@@ -17,4 +22,4 @@ namespace ShoppingMall.Web.Models
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }
     }
-} 
+}

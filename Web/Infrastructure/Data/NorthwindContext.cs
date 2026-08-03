@@ -65,10 +65,10 @@ namespace ShoppingMall.Web.Infrastructure.Data
 
             modelBuilder.Entity<OrderDetail>(entity =>
             {
-                entity.HasKey(e => new { e.OrderID, e.ProductID });
+                entity.HasKey(e => new { e.OrderNum, e.ProductID });
                 entity.HasOne(e => e.Order)
                     .WithMany(o => o.OrderDetails)
-                    .HasForeignKey(e => e.OrderID);
+                    .HasForeignKey(e => e.OrderNum);
                 entity.HasOne(e => e.Product)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(e => e.ProductID);
@@ -133,5 +133,5 @@ namespace ShoppingMall.Web.Infrastructure.Data
             });
         }
     }
-} 
+}
 

@@ -1,18 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShoppingMall.Web.DTOs;
+using ShoppingMall.Web.Filters;
 using ShoppingMall.Web.Infrastructure.Data;
 using ShoppingMall.Web.Infrastructure.Services;
 using ShoppingMall.Web.Models;
 
 namespace ShoppingMall.Web.Controllers
 {
+    [ServiceFilter(typeof(AuthenticatedFilter))]
     public class OrderController : Controller
     {
         private readonly NorthwindContext _context;
@@ -29,9 +32,15 @@ namespace ShoppingMall.Web.Controllers
         // GET: Order
         public async Task<IActionResult> Index()
         {
-            var northwindContext = _context.Orders.Include(o => o.Customer);
-            var orders = await _orderService.Generic.GetAllAsync();
-            return View(orders);
+            try
+            {
+                var items = await _orderService.GetOrdersByUserID(Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+                return View(items);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         // GET: Order/Details/5

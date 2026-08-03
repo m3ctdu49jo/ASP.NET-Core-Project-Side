@@ -1,0 +1,21 @@
+@model IEnumerable<ShoppingCartDTO>
+
+@{
+    ViewData["Title"] = "購物車結帳";
+}
+@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
+@TempData["ErrorMessage"]
+
+<span class="alert alert-info d-inline-block mb-4">以下是您購買的商品，請確認商品數量以及金額是否正確。</span>
+@await Html.PartialAsync("_CartItemsPartial", Model, new ViewDataDictionary(ViewData) {
+    { "isBill", true}
+})
+
+<div class="d-flex justify-content-end mt-4">
+    <a id="checkoutBtn" class="btn btn-warning me-3" asp-action="Checkout">返回購物車</a>
+    <a id="checkoutBtn" class="btn btn-danger" asp-action="BillShipInfo">訂單資料填寫</a>
+</div>
+
+@section Scripts {
+
+}

@@ -1,6 +1,5 @@
 ﻿
 using ShoppingMall.Web.Infrastructure.Repositories;
-using ShoppingMall.Web.Migrations;
 using ShoppingMall.Web.Models;
 
 namespace ShoppingMall.Web.Infrastructure.Services;
@@ -11,7 +10,7 @@ public class ProductCollectionService : IProductCollectionService
     private readonly IProductCollectionRepository _productCollectionRepository;
     public ProductCollectionService(
         IGenericService<ProductCollection> genericService,
-        IProductCollectionRepository productCollectionRepository    
+        IProductCollectionRepository productCollectionRepository
     )
     {
         _genericService = genericService;

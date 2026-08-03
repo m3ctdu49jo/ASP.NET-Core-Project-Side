@@ -1,11 +1,15 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ShoppingMall.Web.DTOs;
 using ShoppingMall.Web.Filters;
 using ShoppingMall.Web.Infrastructure.Services;
-using ShoppingMall.Web.Migrations;
 using ShoppingMall.Web.Models;
+using ShoppingMall.Web.Utils;
+using ShoppingMall.Web.ViewModels;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ShoppingMall.Web.Controllers
@@ -14,22 +18,37 @@ namespace ShoppingMall.Web.Controllers
     public class ShoppingCartController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IUserService _userService;
         private readonly IOrderService _orderService;
+        private readonly IOrderDetailService _orderDetailService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IProductCollectionService _productCollectionService;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _config;
 
-        public ShoppingCartController(IProductService productService, IOrderService orderService, IShoppingCartService shoppingCartService, IProductCollectionService productCollectionService, IMapper mapper)
+        public ShoppingCartController(
+            IProductService productService,
+            IOrderService orderService,
+            IOrderDetailService orderDetailService,
+            IShoppingCartService shoppingCartService,
+            IProductCollectionService productCollectionService,
+            IUserService userService,
+            IMapper mapper,
+            IConfiguration config
+        )
         {
             _productService = productService;
             _orderService = orderService;
+            _orderDetailService = orderDetailService;
             _shoppingCartService = shoppingCartService;
             _productCollectionService = productCollectionService;
+            _userService = userService;
             _mapper = mapper;
+            _config = config;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddToShoppingCart([FromBody]ShoppingCartDTO req)
+        public async Task<IActionResult> AddToShoppingCart([FromBody] ShoppingCartDTO req)
         {
             try
             {
@@ -57,6 +76,88 @@ namespace ShoppingMall.Web.Controllers
             return View(cartItems);
         }
 
+        public async Task<IActionResult> CheckBill()
+        {
+            var cartItems = await _shoppingCartService.GetAllIncludeProductByUserNameAsync(User.Identity.Name);
+            return View(cartItems);
+        }
+
+        public async Task<IActionResult> BillShipInfo()
+        {
+            ShipInfoViewModel model = new ShipInfoViewModel();
+            GetBaseShipInfoViewModel(ref model);
+
+            var cartItems = await _shoppingCartService.GetAllIncludeProductByUserNameAsync(User.Identity.Name);
+            model.CartItems = cartItems.ToList();
+
+            return View(model);
+        }
+        [HttpPost]
+        [ActionName("BillShipInfo")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BillShipInfoCheck(ShipInfoViewModel model)
+        {
+            ShoppingCarOrderViewModel m = new ShoppingCarOrderViewModel();
+
+            GetBaseShipInfoViewModel(ref model);
+
+            try
+            {
+                var cartItems = await _shoppingCartService.GetAllIncludeProductByUserNameAsync(User.Identity.Name);
+                model.CartItems = cartItems.ToList();
+                if (model.Ship_equal_user)
+                {
+                    var userInfo = await _userService.GetByIdAndUserNameAsync(Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value), User.Identity.Name);
+                    if (userInfo == null || userInfo.City == null || userInfo.Address == null || userInfo.Phone == null)
+                    {
+                        model.ResultMsg = "訂購人會員地址資料不完整，請手動填寫寄送資訊";
+                        ModelState.Clear();
+                        return View(nameof(BillShipInfo), model);
+                    }
+                    else
+                    {
+                        m.Shipping.City = userInfo.City;
+                        m.Shipping.Address = userInfo.Address;
+                        m.Shipping.ContactName = userInfo.UserName;
+                        m.Shipping.Phone = userInfo.Phone;
+                    }
+                }
+                else
+                {
+                    if (!ModelState.IsValid)
+                    {
+                        return View(nameof(BillShipInfo), model);
+                    }
+                    m.Shipping = model.Shipping;
+                }
+
+                string orderNum = string.Concat(CommUtil.RandomStringInA_Z(2), CommUtil.RandomStringIn0_9(8));
+
+                var user = await _userService.GetByIdAndUserNameAsync(Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value), User.Identity.Name);
+                await _shoppingCartService.Checkout(user, orderNum, m.Shipping);
+                TempData["orderNum"] = orderNum;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return RedirectToAction(nameof(Successful));
+        }
+
+        private ShipInfoViewModel GetBaseShipInfoViewModel(ref ShipInfoViewModel m)
+        {
+            var cities = ConfigUtil.GetTaiwanCitisSection(_config);
+            var selectListItems = cities.Select(city => new SelectListItem { Text = city.CityName, Value = city.CityName }).ToList();
+            m.Cities = selectListItems;
+
+            return m;
+        }
+        public async Task<IActionResult> Successful()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> RemoveFromCart(int productId)
         {
@@ -72,9 +173,9 @@ namespace ShoppingMall.Web.Controllers
             var cartItems = await _shoppingCartService.GetAllIncludeProductByUserNameAsync(User.Identity.Name);
             return PartialView("_CartItemsPartial", cartItems);
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult> UpdateShoppingCart([FromBody]ShoppingCartDTO req)
+        public async Task<IActionResult> UpdateShoppingCart([FromBody] ShoppingCartDTO req)
         {
             try
             {
@@ -117,7 +218,7 @@ namespace ShoppingMall.Web.Controllers
                 errorMessage = "已達到最大購買數量上限，請確認購買數量";
             return (string.IsNullOrEmpty(errorMessage), errorMessage);
         }
-        
+
         private async Task UpdateShoppingCart(ShoppingCart shoppingItem, Product product, int purchCount)
         {
             if (shoppingItem != null)
@@ -138,4 +239,4 @@ namespace ShoppingMall.Web.Controllers
             }
         }
     }
-} 
+}

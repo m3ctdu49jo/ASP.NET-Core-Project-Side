@@ -1,5 +1,8 @@
 @model IEnumerable<ShoppingCartDTO>
 
+@{
+    Boolean isBill = ViewData["isBill"] == null ? false : (Boolean)ViewData["isBill"];
+}
 <div id="checkout-cart-items">
     @if (Model.Any())
     {
@@ -16,35 +19,58 @@
                                                  class="text-decoration-none">@item.Product.ProductName</a>
                         </div>
                         <div>NT$ @item.Product.UnitPrice</div>
-                        <div>
-                            數量: <span class="d-inline-block"><span class="input-group w-auto">
-                            <input id="@(string.Concat("purchNum_", item.Product.ProductID))" name="Count" type="number"
-                                   min="1" max="@item.Product.UnitsInStock"
-                                   class="purch_num text-center fs-8 border-0 border-top border-bottom"
-                                   value="@item.PurchCount" />
-                        </span></span>
-                    </div>
-                    <div>小計: <font class="text-danger">NT$ @(item.Product.UnitPrice * item.PurchCount)</font>
+                        @if (isBill)
+                        {
+                            <div>數量 :
+                                <span class="d-inline-block">
+                                    <span class="input-group w-auto">
+                                        @item.PurchCount
+                                    </span>
+                                </span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <span class="d-inline-block"><span class="input-group w-auto">
+                                    <input id="@(string.Concat("purchNum_", item.Product.ProductID))" name="Count" type="number"
+                                           min="1" max="@item.Product.UnitsInStock"
+                                           class="purch_num text-center fs-8 border-0 border-top border-bottom"
+                                           value="@item.PurchCount" />
+                                </span></span>
+                            </div>
+                        }
+
+                        <div>小計 : <font class="text-danger">NT$ @(item.Product.UnitPrice * item.PurchCount)</font>
+                        </div>
                     </div>
                 </div>
+                @if (!isBill)
+                {
+                    <div>
+                        <form asp-action="RemoveFromCart" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@item.Product.ProductID" />
+                            <button type="button" class="btn btn-danger remove-cart-item">移除</button>
+                        </form>
+                    </div>
+                }
             </div>
+        }
+        <div class="text-end">總計 : <font class="text-danger">NT$ @totalAmount</font>
+        </div>
 
-            <div>
-                <form asp-action="RemoveFromCart" method="post" class="d-inline">
-                    <input type="hidden" name="productId" value="@item.Product.ProductID" />
-                    <button type="button" class="btn btn-danger remove-cart-item">移除</button>
-                </form>
+        @if (!isBill)
+        {
+            <div class="d-flex justify-content-end mt-4">
+                <a id="checkoutBtn" class="btn btn-warning" asp-action="CheckBill">買單去</a>
             </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <p>您的購物車是空的。</p>
         </div>
     }
-    <div class="text-end">總計： <font class="text-danger">NT$ @totalAmount</font>
-    </div>
-}
-    else
-{
-    <div class="alert alert-info">
-        <p>您的購物車是空的。</p>
-    </div>
-}
 
 </div>

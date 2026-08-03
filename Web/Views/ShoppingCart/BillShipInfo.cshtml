@@ -1,0 +1,90 @@
+@using System.Security.Claims
+@model ShipInfoViewModel
+
+@{
+    ViewData["Title"] = "訂單資料填寫";
+}
+@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
+<span class="alert alert-info d-inline-block mb-4">請確認訂單明細以及填寫收件人資訊，送出表單後即可完成購買。</span>
+
+<div class="fs-5 mb-3">訂單明細</div>
+@await Html.PartialAsync("_CartItemsPartial", Model.CartItems, new ViewDataDictionary(ViewData) {
+    { "isBill", true}
+})
+
+<form asp-action="BillShipInfo" asp-controller="ShoppingCart" method="POST">
+    @* <div asp-validation-summary="All" class="text-danger"></div> *@
+    <span class="text-danger w-100">@Model.ResultMsg</span>
+    <span asp-validation-summary="ModelOnly" class="text-dang6er w-100"></span>
+    <div class="fs-5 mb-3 mt-4">收件人資訊</div>
+    <div id="ship_info" class="d-flex flex-column gap-3 form-check ps-0">
+        <div class="d-flex align-items-center">
+            <input type="checkbox" asp-for="Ship_equal_user" style="width:20px; height:20px"
+                   class="me-2 form-check-input ms-0" checked="@Model.Ship_equal_user" />
+            <label asp-for="Ship_equal_user" class="fw-bold fs-6">同訂購人</label>
+            <span asp-validation-for="Ship_equal_user" class="text-danger d-block"></span>
+        </div>
+        <div>
+            <label class="me-2" asp-for="Shipping.ContactName">收件人</label>
+            <styled-input asp-for="Shipping.ContactName" class="form-check-input"></styled-input>
+            <span asp-validation-for="Shipping.ContactName" class="text-danger d-block"></span>
+        </div>
+        <div>
+            <label class="me-2" asp-for="Shipping.Phone">聯絡電話</label><styled-input
+            asp-for="Shipping.Phone"></styled-input>
+            <span asp-validation-for="Shipping.Phone" class="text-danger d-block"></span>
+        </div>
+        <div>
+            <label class="me-2" asp-for="Shipping.City">配送地址</label><select asp-for="Shipping.City"
+                                                                            asp-items="@Model.Cities" class="me-2"></select>
+            <styled-input asp-for="Shipping.Address" style="width: 600px;" class="form-check-input"></styled-input>
+            <span asp-validation-for="Shipping.Address" class="text-danger d-block"></span>
+        </div>
+    </div>
+
+    <div id="ship_info" class="d-flex flex-column gap-3 mt-5">
+        <div class="fs-5">付款方式</div>
+        <div class="d-flex align-items-center gap-3">
+            <div>
+                <input type="radio" asp-for="Shipping.Payment" id="cash" class="form-check-input" value="1" checked />
+                <label for="atm" class="form-check-label">ATM 匯款</label>
+            </div>
+            <div>
+                <input type="radio" asp-for="Shipping.Payment" id="credit" class="form-check-input" value="2" />
+                <label for="credit" class="form-check-label">信用卡</label>
+            </div>
+            <div>
+                <input type="radio" asp-for="Shipping.Payment" id="linepay" class="form-check-input" value="3" />
+                <label for="linepay" class="form-check-label">Line Pay</label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="d-flex justify-content-end mt-5">
+        <a id="checkoutBtn" class="btn btn-warning me-3" asp-action="Checkout">返回購物車</a>
+        <input type="submit" id="checkoutBtn" class="btn btn-danger" value="確認下單" />
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        document.getElementById("Ship_equal_user").addEventListener("click", () => {
+            setShipEqualCheckbox();
+        });
+
+        setShipEqualCheckbox();
+
+        function setShipEqualCheckbox() {
+            let checked = document.getElementById("Ship_equal_user").checked;
+            document.querySelectorAll("#ship_info input[type=text], #ship_info select").forEach(item => {
+                item.disabled = checked;
+                if (checked)
+                    item.classList.add("bg-grey");
+                else
+                    item.classList.remove("bg-grey");
+            });
+        }
+    </script>
+
+}

@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "訂單完成";
+}
+@await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
+@TempData["ErrorMessage"]
+
+<div>
+    購買成功，訂單已成立! 訂單編號： @TempData["orderNum"]
+</div>
+
+
+
+@section Scripts {
+}

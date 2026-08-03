@@ -1,3 +1,4 @@
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "登入訊息";
@@ -6,17 +7,17 @@
 @await Html.PartialAsync("Ordinary/_TitlePartial", ViewData["Title"])
 
 <p>
-    @if(TempData["LoginSuccessfully"] != null && (bool)TempData["LoginSuccessfully"])
+    @if (TempData["LoginSuccessfully"] != null && (bool)TempData["LoginSuccessfully"])
     {
-        <strong>歡迎回來! @User.Identity?.Name</strong>
+        <strong class="fs-4">歡迎回來! @User.FindFirst(ClaimTypes.GivenName)?.Value</strong>
         <p>
-            登入成功!<a asp-action="Index" asp-area="" asp-controller="Home">請點此回首頁</a>
+            登入成功! <a asp-action="Index" asp-area="" asp-controller="Home">請點此回首頁</a>
         </p>
     }
     else
     {
         <p>
-            登入失敗!<a asp-action="Index" asp-area="" asp-controller="Login">請點此重新登入</a>
+            登入失敗! <a asp-action="Index" asp-area="" asp-controller="Login">請點此重新登入</a>
         </p>
 
     }
@@ -26,7 +27,7 @@
 
     <script>
         window.addEventListener("pageshow", () => {
-            if(event.persisted){
+            if (event.persisted) {
                 window.location.reload();
             }
         });
